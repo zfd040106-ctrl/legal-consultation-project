@@ -1,0 +1,16 @@
+{
+  "navigationBarTitleText": "AI法律助手",
+  "navigationBarBackgroundColor": "#FFFFFF",
+  "navigationBarTextStyle": "black",
+  "navigationStyle": "custom",
+  "usingComponents": {
+    "t-navbar": "tdesign-miniprogram/navbar/navbar",
+    "t-button": "tdesign-miniprogram/button/button",
+    "t-loading": "tdesign-miniprogram/loading/loading",
+    "t-icon": "tdesign-miniprogram/icon/icon",
+    "t-toast": "tdesign-miniprogram/toast/toast",
+    "t-drawer": "tdesign-miniprogram/drawer/drawer",
+    "t-cell": "tdesign-miniprogram/cell/cell",
+    "t-cell-group": "tdesign-miniprogram/cell-group/cell-group"
+  }
+}

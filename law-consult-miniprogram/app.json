@@ -1,0 +1,43 @@
+{
+  "pages": [
+    "pages/common/splash/splash",
+    "pages/auth/login/login",
+    "pages/auth/register/register",
+    "pages/user/index/index",
+    "pages/user/carouselDetail/carouselDetail",
+    "pages/user/findLawyer/findLawyer",
+    "pages/user/consultation/consultation",
+    "pages/user/consultationList/consultationList",
+    "pages/user/consultationDetail/consultationDetail",
+    "pages/user/chat/chat",
+    "pages/user/aiChat/aiChat",
+    "pages/user/complaint/complaint",
+    "pages/user/profile/profile",
+    "pages/user/wallet/wallet",
+    "pages/user/profile/edit-profile/edit-profile",
+    "pages/user/message/message",
+    "pages/user/settings/change-password/change-password",
+    "pages/lawyer/index/index",
+    "pages/lawyer/consultationList/consultationList",
+    "pages/lawyer/consultationDetail/consultationDetail",
+    "pages/lawyer/chat/chat",
+    "pages/lawyer/reply/reply",
+    "pages/lawyer/profile/profile",
+    "pages/lawyer/wallet/wallet",
+    "pages/lawyer/profile/edit-profile/edit-profile",
+    "pages/lawyer/statistics/statistics",
+    "pages/lawyer/message/message"
+  ],
+  "window": {
+    "navigationStyle": "custom",
+    "navigationBarTextStyle": "black",
+    "navigationBarTitleText": "法律咨询",
+    "backgroundColor": "#ffffff",
+    "backgroundTextStyle": "light"
+  },
+  "networkTimeout": {
+    "request": 30000,
+    "downloadFile": 30000
+  },
+  "debug": false
+}

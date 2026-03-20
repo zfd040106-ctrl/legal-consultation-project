@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.example.lawconsultserver.mapper.AiChatHistoryMapper">
+
+    <resultMap id="AiChatHistoryResult" type="com.example.lawconsultserver.entity.AiChatHistory">
+        <id column="id" property="id"/>
+        <result column="user_id" property="userId"/>
+        <result column="question" property="question"/>
+        <result column="answer" property="answer"/>
+        <result column="created_at" property="createdAt"/>
+    </resultMap>
+
+    <!-- 插入AI对话 -->
+    <insert id="insertChat" parameterType="com.example.lawconsultserver.entity.AiChatHistory" useGeneratedKeys="true" keyProperty="id">
+        INSERT INTO ai_chat_history (user_id, question, answer, created_at)
+        VALUES (#{userId}, #{question}, #{answer}, NOW())
+    </insert>
+
+    <!-- 查询用户对话历史 -->
+    <select id="selectChatsByUserId" resultMap="AiChatHistoryResult">
+        SELECT * FROM ai_chat_history
+        WHERE user_id = #{userId}
+        ORDER BY created_at DESC
+        LIMIT #{offset}, #{limit}
+    </select>
+
+    <!-- 统计用户对话总数 -->
+    <select id="countChatsByUserId" resultType="long">
+        SELECT COUNT(*) FROM ai_chat_history
+        WHERE user_id = #{userId}
+    </select>
+
+    <delete id="deleteChatsByIds">
+        DELETE FROM ai_chat_history
+        WHERE user_id = #{userId}
+          AND id IN
+        <foreach collection="ids" item="id" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+
+</mapper>

@@ -1,0 +1,125 @@
+<view class="profile-container">
+  <t-navbar
+    t-class="navbar-class"
+    title="我的"
+  />
+
+  <scroll-view class="main-content" scroll-y>
+    <view class="profile-card" bindtap="goToEditProfile">
+      <view class="profile-main">
+        <t-avatar
+          image="{{userInfo.avatar || ''}}"
+          icon="{{!userInfo.avatar ? 'user' : ''}}"
+          size="112rpx"
+        />
+        <view class="profile-text">
+          <view class="profile-name">{{userInfo.nickname || '未设置昵称'}}</view>
+          <view class="profile-account">{{userInfo.accountText || 'U未绑定账号'}}</view>
+        </view>
+      </view>
+      <t-icon name="chevron-right" size="36rpx" color="#C7C7CC" />
+    </view>
+
+    <view class="stats-card">
+      <view class="stat-item" bindtap="goToConsultationList" data-status="all">
+        <view class="stat-value">{{stats.totalConsultations || 0}}</view>
+        <view class="stat-label">全部咨询</view>
+      </view>
+      <view class="stat-divider"></view>
+      <view class="stat-item" bindtap="goToConsultationList" data-status="in_progress">
+        <view class="stat-value">{{stats.pendingConsultations || 0}}</view>
+        <view class="stat-label">进行中</view>
+      </view>
+      <view class="stat-divider"></view>
+      <view class="stat-item" bindtap="goToConsultationList" data-status="resolved">
+        <view class="stat-value">{{stats.completedConsultations || 0}}</view>
+        <view class="stat-label">已完成</view>
+      </view>
+    </view>
+
+    <view class="menu-section">
+      <t-cell-group>
+        <t-cell
+          title="我的咨询"
+          hover
+          arrow
+          leftIcon="chat"
+          bindtap="goToConsultationList"
+        />
+        <t-cell
+          title="钱包中心"
+          hover
+          arrow
+          leftIcon="wallet"
+          bindtap="goToWallet"
+        />
+        <t-cell
+          title="消息通知"
+          hover
+          arrow
+          leftIcon="notification"
+          note="{{unreadCount > 0 ? unreadCount + '条未读' : ''}}"
+          bindtap="goToMessage"
+        />
+        <t-cell
+          title="AI法律助手"
+          hover
+          arrow
+          leftIcon="service"
+          bindtap="goToAiChat"
+        />
+      </t-cell-group>
+    </view>
+
+    <view class="menu-section">
+      <t-cell-group>
+        <t-cell
+          title="账号安全"
+          hover
+          arrow
+          leftIcon="secured"
+          bindtap="goToSecurity"
+        />
+        <t-cell
+          title="投诉建议"
+          hover
+          arrow
+          leftIcon="edit"
+          bindtap="goToComplaint"
+        />
+        <t-cell
+          title="设置"
+          hover
+          arrow
+          leftIcon="setting"
+          bindtap="goToSettings"
+        />
+      </t-cell-group>
+    </view>
+
+    <view class="logout-section">
+      <t-button
+        theme="danger"
+        variant="outline"
+        block
+        bindtap="handleLogout"
+      >
+        退出登录
+      </t-button>
+    </view>
+
+    <view class="bottom-spacing"></view>
+  </scroll-view>
+
+  <t-dialog
+    visible="{{showLogoutDialog}}"
+    title="确认退出"
+    content="确定要退出登录吗？"
+    confirm-btn="确定"
+    cancel-btn="取消"
+    bind:confirm="confirmLogout"
+    bind:cancel="cancelLogout"
+  />
+
+  <user-tabbar activeTab="profile" bind:tabchange="handleTabChange" />
+</view>

@@ -1,0 +1,13 @@
+{
+  "navigationBarTitleText": "创建账号",
+  "navigationBarBackgroundColor": "#FFFFFF",
+  "navigationBarTextStyle": "black",
+  "navigationStyle": "custom",
+  "usingComponents": {
+    "t-input": "tdesign-miniprogram/input/input",
+    "t-button": "tdesign-miniprogram/button/button",
+    "t-navbar": "tdesign-miniprogram/navbar/navbar",
+    "t-radio-group": "tdesign-miniprogram/radio-group/radio-group",
+    "t-radio": "tdesign-miniprogram/radio/radio"
+  }
+}

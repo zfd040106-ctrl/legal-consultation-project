@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.example.lawconsultserver.mapper.ConsultationReplyMapper">
+
+    <resultMap id="ConsultationReplyResult" type="com.example.lawconsultserver.entity.ConsultationReply">
+        <id column="id" property="id"/>
+        <result column="consultation_id" property="consultationId"/>
+        <result column="user_id" property="userId"/>
+        <result column="lawyer_id" property="lawyerId"/>
+        <result column="content" property="content"/>
+        <result column="is_solution" property="isSolution"/>
+        <result column="is_lawyer" property="isLawyer"/>
+        <result column="created_at" property="createdAt"/>
+        <result column="updated_at" property="updatedAt"/>
+    </resultMap>
+
+    <!-- 新增律师回复 -->
+    <insert id="insertReply" parameterType="com.example.lawconsultserver.entity.ConsultationReply" useGeneratedKeys="true" keyProperty="id">
+        INSERT INTO consultation_replies (consultation_id, lawyer_id, content, is_solution, is_lawyer, created_at, updated_at)
+        VALUES (#{consultationId}, #{lawyerId}, #{content}, #{isSolution}, 1, NOW(), NOW())
+    </insert>
+
+    <!-- 新增用户追问 -->
+    <insert id="insertUserReply" parameterType="com.example.lawconsultserver.entity.ConsultationReply" useGeneratedKeys="true" keyProperty="id">
+        INSERT INTO consultation_replies (consultation_id, user_id, content, is_lawyer, created_at, updated_at)
+        VALUES (#{consultationId}, #{userId}, #{content}, 0, NOW(), NOW())
+    </insert>
+
+    <!-- 根据ID查询回复 -->
+    <select id="selectReplyById" parameterType="int" resultMap="ConsultationReplyResult">
+        SELECT * FROM consultation_replies WHERE id = #{id}
+    </select>
+
+    <!-- 根据咨询ID查询回复列表 -->
+    <select id="selectRepliesByConsultationId" resultMap="ConsultationReplyResult">
+        SELECT * FROM consultation_replies
+        WHERE consultation_id = #{consultationId}
+        ORDER BY created_at ASC
+    </select>
+
+    <!-- 更新回复 -->
+    <update id="updateReply" parameterType="com.example.lawconsultserver.entity.ConsultationReply">
+        UPDATE consultation_replies
+        <set>
+            <if test="content != null">content = #{content},</if>
+            <if test="isSolution != null">is_solution = #{isSolution},</if>
+            updated_at = NOW()
+        </set>
+        WHERE id = #{id}
+    </update>
+
+    <!-- 根据咨询ID删除回复 -->
+    <delete id="deleteRepliesByConsultationId" parameterType="int">
+        DELETE FROM consultation_replies WHERE consultation_id = #{consultationId}
+    </delete>
+
+</mapper>

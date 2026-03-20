@@ -1,0 +1,346 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.example.lawconsultserver.mapper.ConsultationMapper">
+
+    <resultMap id="ConsultationResult" type="com.example.lawconsultserver.entity.Consultation">
+        <id column="id" property="id"/>
+        <result column="user_id" property="userId"/>
+        <result column="lawyer_id" property="lawyerId"/>
+        <result column="assignment_type" property="assignmentType"/>
+        <result column="title" property="title"/>
+        <result column="description" property="description"/>
+        <result column="category" property="category"/>
+        <result column="priority" property="priority"/>
+        <result column="status" property="status"/>
+        <result column="fee_amount" property="feeAmount"/>
+        <result column="pay_status" property="payStatus"/>
+        <result column="pay_at" property="payAt"/>
+        <result column="settled_at" property="settledAt"/>
+        <result column="attachments" property="attachments"/>
+        <result column="created_at" property="createdAt"/>
+        <result column="updated_at" property="updatedAt"/>
+        <result column="resolved_at" property="resolvedAt"/>
+        <result column="user_confirmed_resolved" property="userConfirmedResolved"/>
+        <result column="lawyer_confirmed_resolved" property="lawyerConfirmedResolved"/>
+        <result column="deleted_by_user" property="deletedByUser"/>
+        <result column="deleted_by_lawyer" property="deletedByLawyer"/>
+        <result column="deleted_by_admin" property="deletedByAdmin"/>
+        <result column="user_name" property="userName"/>
+        <result column="user_avatar" property="userAvatar"/>
+        <result column="lawyer_name" property="lawyerName"/>
+        <result column="lawyer_avatar" property="lawyerAvatar"/>
+    </resultMap>
+
+    <insert id="insertConsultation" parameterType="com.example.lawconsultserver.entity.Consultation" useGeneratedKeys="true" keyProperty="id">
+        INSERT INTO consultations (
+            user_id, lawyer_id, assignment_type, title, description, category, priority, status,
+            fee_amount, pay_status, pay_at, settled_at, attachments, created_at, updated_at
+        )
+        VALUES (
+            #{userId}, #{lawyerId}, #{assignmentType}, #{title}, #{description}, #{category}, #{priority}, #{status},
+            #{feeAmount}, #{payStatus}, #{payAt}, #{settledAt}, #{attachments}, NOW(), NOW()
+        )
+    </insert>
+
+    <select id="selectConsultationById" parameterType="int" resultMap="ConsultationResult">
+        SELECT c.*,
+               u.username AS user_name,
+               u.avatar AS user_avatar,
+               l.username AS lawyer_name,
+               l.avatar AS lawyer_avatar
+        FROM consultations c
+        LEFT JOIN users u ON c.user_id = u.id
+        LEFT JOIN users l ON c.lawyer_id = l.id
+        WHERE c.id = #{id}
+    </select>
+
+    <select id="selectConsultationsByUserId" resultMap="ConsultationResult">
+        SELECT c.*,
+               l.username AS lawyer_name,
+               l.avatar AS lawyer_avatar
+        FROM consultations c
+        LEFT JOIN users l ON c.lawyer_id = l.id
+        WHERE c.user_id = #{userId}
+          AND c.deleted_by_user = FALSE
+        <if test="status != null and status != ''">
+            AND c.status = #{status}
+        </if>
+        ORDER BY c.created_at DESC
+        LIMIT #{offset}, #{limit}
+    </select>
+
+    <select id="countUserConsultations" resultType="long">
+        SELECT COUNT(*)
+        FROM consultations
+        WHERE user_id = #{userId}
+          AND deleted_by_user = FALSE
+        <if test="status != null and status != ''">
+            AND status = #{status}
+        </if>
+    </select>
+
+    <select id="selectConsultationsByLawyerId" resultMap="ConsultationResult">
+        SELECT c.*,
+               u.username AS user_name,
+               u.avatar AS user_avatar
+        FROM consultations c
+        LEFT JOIN users u ON c.user_id = u.id
+        WHERE (
+                c.lawyer_id = #{lawyerId}
+                OR (c.lawyer_id IS NULL AND c.assignment_type = 'public')
+              )
+          AND c.deleted_by_lawyer = FALSE
+        <if test="status != null and status != ''">
+            <choose>
+                <when test="status == 'open'">
+                    AND c.status = 'open'
+                    AND c.assignment_type = 'public'
+                    AND c.lawyer_id IS NULL
+                </when>
+                <when test="status == 'pending_accept'">
+                    AND c.status = 'pending_accept'
+                    AND c.assignment_type = 'directed'
+                    AND c.lawyer_id = #{lawyerId}
+                </when>
+                <otherwise>
+                    AND c.status = #{status}
+                </otherwise>
+            </choose>
+        </if>
+        ORDER BY c.created_at DESC
+        LIMIT #{offset}, #{limit}
+    </select>
+
+    <select id="countLawyerConsultations" resultType="long">
+        SELECT COUNT(*)
+        FROM consultations
+        WHERE (
+                lawyer_id = #{lawyerId}
+                OR (lawyer_id IS NULL AND assignment_type = 'public')
+              )
+          AND deleted_by_lawyer = FALSE
+        <if test="status != null and status != ''">
+            <choose>
+                <when test="status == 'open'">
+                    AND status = 'open'
+                    AND assignment_type = 'public'
+                    AND lawyer_id IS NULL
+                </when>
+                <when test="status == 'pending_accept'">
+                    AND status = 'pending_accept'
+                    AND assignment_type = 'directed'
+                    AND lawyer_id = #{lawyerId}
+                </when>
+                <otherwise>
+                    AND status = #{status}
+                </otherwise>
+            </choose>
+        </if>
+    </select>
+
+    <select id="selectAllConsultations" resultMap="ConsultationResult">
+        SELECT c.*,
+               u.username AS user_name,
+               u.avatar AS user_avatar,
+               l.username AS lawyer_name,
+               l.avatar AS lawyer_avatar
+        FROM consultations c
+        LEFT JOIN users u ON c.user_id = u.id
+        LEFT JOIN users l ON c.lawyer_id = l.id
+        <where>
+            c.deleted_by_admin = FALSE
+            <if test="status != null and status != ''">
+                AND c.status = #{status}
+            </if>
+            <if test="assignmentType != null and assignmentType != ''">
+                AND c.assignment_type = #{assignmentType}
+            </if>
+            <if test="priority != null and priority != ''">
+                AND c.priority = #{priority}
+            </if>
+            <if test="category != null and category != ''">
+                AND c.category = #{category}
+            </if>
+            <if test="keyword != null and keyword != ''">
+                AND (c.title LIKE CONCAT('%', #{keyword}, '%')
+                     OR u.username LIKE CONCAT('%', #{keyword}, '%')
+                     OR l.username LIKE CONCAT('%', #{keyword}, '%'))
+            </if>
+        </where>
+        ORDER BY c.created_at DESC
+        LIMIT #{offset}, #{limit}
+    </select>
+
+    <select id="countAllConsultations" resultType="long">
+        SELECT COUNT(*)
+        FROM consultations c
+        LEFT JOIN users u ON c.user_id = u.id
+        LEFT JOIN users l ON c.lawyer_id = l.id
+        <where>
+            c.deleted_by_admin = FALSE
+            <if test="status != null and status != ''">
+                AND c.status = #{status}
+            </if>
+            <if test="assignmentType != null and assignmentType != ''">
+                AND c.assignment_type = #{assignmentType}
+            </if>
+            <if test="priority != null and priority != ''">
+                AND c.priority = #{priority}
+            </if>
+            <if test="category != null and category != ''">
+                AND c.category = #{category}
+            </if>
+            <if test="keyword != null and keyword != ''">
+                AND (c.title LIKE CONCAT('%', #{keyword}, '%')
+                     OR u.username LIKE CONCAT('%', #{keyword}, '%')
+                     OR l.username LIKE CONCAT('%', #{keyword}, '%'))
+            </if>
+        </where>
+    </select>
+
+    <update id="updateConsultation" parameterType="com.example.lawconsultserver.entity.Consultation">
+        UPDATE consultations
+        <set>
+            <if test="title != null">title = #{title},</if>
+            <if test="description != null">description = #{description},</if>
+            <if test="category != null">category = #{category},</if>
+            <if test="priority != null">priority = #{priority},</if>
+            <if test="assignmentType != null">assignment_type = #{assignmentType},</if>
+            <if test="lawyerId != null">lawyer_id = #{lawyerId},</if>
+            <if test="feeAmount != null">fee_amount = #{feeAmount},</if>
+            <if test="payStatus != null">pay_status = #{payStatus},</if>
+            <if test="payAt != null">pay_at = #{payAt},</if>
+            <if test="settledAt != null">settled_at = #{settledAt},</if>
+            updated_at = NOW()
+        </set>
+        WHERE id = #{id}
+    </update>
+
+    <update id="updateConsultationStatus">
+        UPDATE consultations
+        SET status = #{status},
+            updated_at = NOW(),
+            resolved_at = IF(#{status} = 'resolved', NOW(), resolved_at)
+        WHERE id = #{id}
+    </update>
+
+    <update id="assignLawyer">
+        UPDATE consultations
+        SET lawyer_id = #{lawyerId},
+            status = 'in_progress',
+            user_confirmed_resolved = 0,
+            lawyer_confirmed_resolved = 0,
+            updated_at = NOW()
+        WHERE id = #{id}
+          AND (lawyer_id IS NULL OR lawyer_id = #{lawyerId})
+    </update>
+
+    <update id="updatePaymentInfo">
+        UPDATE consultations
+        SET pay_status = #{payStatus},
+            pay_at = #{payAt},
+            updated_at = NOW()
+        WHERE id = #{id}
+    </update>
+
+    <update id="markConsultationSettled">
+        UPDATE consultations
+        SET pay_status = 'settled',
+            settled_at = NOW(),
+            updated_at = NOW()
+        WHERE id = #{id}
+    </update>
+
+    <update id="markConsultationRefunded">
+        UPDATE consultations
+        SET pay_status = 'refunded',
+            updated_at = NOW()
+        WHERE id = #{id}
+    </update>
+
+    <delete id="deleteConsultation" parameterType="int">
+        DELETE FROM consultations WHERE id = #{id}
+    </delete>
+
+    <update id="updateUserConfirmedResolved">
+        UPDATE consultations
+        SET user_confirmed_resolved = #{confirmed},
+            updated_at = NOW()
+        WHERE id = #{id}
+    </update>
+
+    <update id="updateLawyerConfirmedResolved">
+        UPDATE consultations
+        SET lawyer_confirmed_resolved = #{confirmed},
+            updated_at = NOW()
+        WHERE id = #{id}
+    </update>
+
+    <update id="resetResolvedConfirmations">
+        UPDATE consultations
+        SET user_confirmed_resolved = 0,
+            lawyer_confirmed_resolved = 0,
+            updated_at = NOW()
+        WHERE id = #{id}
+    </update>
+
+    <update id="softDeleteByUser">
+        UPDATE consultations
+        SET deleted_by_user = TRUE,
+            updated_at = NOW()
+        WHERE id = #{id}
+    </update>
+
+    <update id="softDeleteByLawyer">
+        UPDATE consultations
+        SET deleted_by_lawyer = TRUE,
+            updated_at = NOW()
+        WHERE id = #{id}
+    </update>
+
+    <update id="softDeleteByAdmin">
+        UPDATE consultations
+        SET deleted_by_admin = TRUE,
+            updated_at = NOW()
+        WHERE id = #{id}
+    </update>
+
+    <select id="getConsultationDistribution" resultType="map">
+        SELECT COALESCE(category, '未分类') AS category, COUNT(*) AS count
+        FROM consultations
+        WHERE deleted_by_admin = FALSE
+        GROUP BY category
+        ORDER BY count DESC
+    </select>
+
+    <select id="selectById" parameterType="int" resultMap="ConsultationResult">
+        SELECT c.*,
+               u.username AS user_name,
+               u.avatar AS user_avatar,
+               l.username AS lawyer_name,
+               l.avatar AS lawyer_avatar
+        FROM consultations c
+        LEFT JOIN users u ON c.user_id = u.id
+        LEFT JOIN users l ON c.lawyer_id = l.id
+        WHERE c.id = #{id}
+    </select>
+
+    <delete id="deleteById" parameterType="int">
+        DELETE FROM consultations WHERE id = #{id}
+    </delete>
+
+    <delete id="deleteConsultationRepliesByConsultationId" parameterType="int">
+        DELETE FROM consultation_replies WHERE consultation_id = #{consultationId}
+    </delete>
+
+    <select id="getResolvedConsultationDistributionByLawyerId" resultType="map">
+        SELECT COALESCE(category, '未分类') AS category, COUNT(*) AS count
+        FROM consultations
+        WHERE lawyer_id = #{lawyerId}
+          AND status = 'resolved'
+        GROUP BY category
+        ORDER BY count DESC
+    </select>
+
+</mapper>

@@ -1,0 +1,56 @@
+﻿<!-- 鍥炲鍜ㄨ椤甸潰 -->
+<view class="reply-container">
+  <!-- 瀵艰埅鏍?-->
+  <t-navbar
+    t-class="navbar-class"
+    title="鍥炲鍜ㄨ"
+    left-arrow
+    bind:go-back="handleBack"
+  />
+
+  <scroll-view class="main-content" scroll-y>
+    <!-- 鍥炲鍐呭 -->
+    <view class="section-card">
+      <view class="section-title">鍥炲鍐呭 <text class="required">*</text></view>
+      <t-textarea
+        placeholder="璇疯緭鍏ユ偍鐨勪笓涓氬洖澶嶏紝灏介噺璇︾粏璇存槑娉曞緥渚濇嵁鍜屽缓璁?.."
+        value="{{content}}"
+        maxlength="5000"
+        indicator
+        autosize
+        style="--td-textarea-background-color: #F8F8F8; --td-textarea-border-radius: 12rpx;"
+        bind:change="handleContentChange"
+      />
+      <view wx:if="{{error}}" class="error-text">{{error}}</view>
+    </view>
+
+    <!-- 鍥炲鎻愮ず -->
+    <view class="tips-card">
+      <view class="tips-title">鍥炲寤鸿</view>
+      <view class="tips-item">1. 璇烽拡瀵圭敤鎴风殑鍏蜂綋闂缁欏嚭涓撲笟瑙ｇ瓟</view>
+      <view class="tips-item">2. 灏介噺寮曠敤鐩稿叧娉曞緥鏉℃浣滀负渚濇嵁</view>
+      <view class="tips-item">3. 给出明确的建议和下一步操作指引</view>
+      <view class="tips-item">4. 使用通俗易懂的语言，避免过多专业术语</view>
+    </view>
+
+    <!-- 搴曢儴闂磋窛 -->
+    <view class="bottom-spacing"></view>
+  </scroll-view>
+
+  <!-- 鎻愪氦鎸夐挳 -->
+  <view class="submit-bar">
+    <t-button
+      theme="primary"
+      block
+      loading="{{loading}}"
+      disabled="{{loading}}"
+      bindtap="handleSubmit"
+    >
+      {{loading ? '鎻愪氦涓?..' : '鎻愪氦鍥炲'}}
+    </t-button>
+  </view>
+
+  <!-- Toast -->
+  <t-toast id="t-toast" />
+</view>
+

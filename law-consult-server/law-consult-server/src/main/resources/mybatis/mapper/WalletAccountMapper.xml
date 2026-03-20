@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.example.lawconsultserver.mapper.WalletAccountMapper">
+
+    <resultMap id="WalletAccountResult" type="com.example.lawconsultserver.entity.WalletAccount">
+        <id column="id" property="id"/>
+        <result column="owner_type" property="ownerType"/>
+        <result column="owner_id" property="ownerId"/>
+        <result column="available_balance" property="availableBalance"/>
+        <result column="frozen_balance" property="frozenBalance"/>
+        <result column="total_income" property="totalIncome"/>
+        <result column="total_withdrawn" property="totalWithdrawn"/>
+        <result column="version" property="version"/>
+        <result column="created_at" property="createdAt"/>
+        <result column="updated_at" property="updatedAt"/>
+    </resultMap>
+
+    <select id="selectByOwner" resultMap="WalletAccountResult">
+        SELECT *
+        FROM wallet_accounts
+        WHERE owner_type = #{ownerType} AND owner_id = #{ownerId}
+        LIMIT 1
+    </select>
+
+    <insert id="insertAccount" parameterType="com.example.lawconsultserver.entity.WalletAccount" useGeneratedKeys="true" keyProperty="id">
+        INSERT INTO wallet_accounts (
+            owner_type, owner_id, available_balance, frozen_balance, total_income, total_withdrawn, version, created_at, updated_at
+        )
+        VALUES (
+            #{ownerType}, #{ownerId}, #{availableBalance}, #{frozenBalance}, #{totalIncome}, #{totalWithdrawn}, #{version}, NOW(), NOW()
+        )
+    </insert>
+
+    <update id="updateAccount" parameterType="com.example.lawconsultserver.entity.WalletAccount">
+        UPDATE wallet_accounts
+        SET available_balance = #{availableBalance},
+            frozen_balance = #{frozenBalance},
+            total_income = #{totalIncome},
+            total_withdrawn = #{totalWithdrawn},
+            version = COALESCE(version, 0) + 1,
+            updated_at = NOW()
+        WHERE id = #{id}
+    </update>
+
+</mapper>

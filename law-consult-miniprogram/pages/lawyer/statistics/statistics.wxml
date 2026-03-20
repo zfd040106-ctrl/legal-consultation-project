@@ -1,0 +1,101 @@
+<view class="statistics-container">
+  <t-navbar
+    t-class="navbar-class"
+    title="数据统计"
+    left-arrow
+    bind:go-back="handleBack"
+  />
+
+  <scroll-view class="main-content" scroll-y enable-flex refresher-enabled bindrefresherrefresh="onRefresh" refresher-triggered="{{refreshing}}">
+    <view class="time-tabs">
+      <t-tabs value="{{timeRange}}" bind:change="onTimeRangeChange">
+        <t-tab-panel label="本周" value="week" />
+        <t-tab-panel label="本月" value="month" />
+        <t-tab-panel label="全部" value="all" />
+      </t-tabs>
+    </view>
+
+    <view wx:if="{{loading}}" class="loading-container">
+      <t-loading theme="circular" size="40rpx" text="加载中..." />
+    </view>
+
+    <block wx:else>
+      <view class="overview-card">
+        <view class="card-title">数据概览</view>
+        <view class="overview-list">
+          <view class="overview-row">
+            <view class="overview-label-left">总咨询数</view>
+            <view class="overview-value-right">{{overview.totalConsultations || 0}}</view>
+          </view>
+          <view class="overview-divider"></view>
+          <view class="overview-row">
+            <view class="overview-label-left">已解决</view>
+            <view class="overview-value-right">{{overview.resolvedCount || 0}}</view>
+          </view>
+          <view class="overview-divider"></view>
+          <view class="overview-row">
+            <view class="overview-label-left">处理中</view>
+            <view class="overview-value-right">{{overview.inProgressCount || 0}}</view>
+          </view>
+        </view>
+      </view>
+
+      <view class="wallet-card">
+        <view class="card-title">收入与提现</view>
+        <view class="wallet-grid">
+          <view class="wallet-item">
+            <view class="wallet-label">可提现金额</view>
+            <view class="wallet-value">¥{{walletSummary.availableBalance}}</view>
+          </view>
+          <view class="wallet-item">
+            <view class="wallet-label">冻结金额</view>
+            <view class="wallet-value">¥{{walletSummary.frozenBalance}}</view>
+          </view>
+          <view class="wallet-item">
+            <view class="wallet-label">{{timeRange === 'week' ? '本周收入' : (timeRange === 'month' ? '本月收入' : '累计收入')}}</view>
+            <view class="wallet-value">¥{{walletSummary.totalIncome}}</view>
+          </view>
+          <view class="wallet-item">
+            <view class="wallet-label">{{timeRange === 'week' ? '本周提现' : (timeRange === 'month' ? '本月提现' : '累计提现')}}</view>
+            <view class="wallet-value">¥{{walletSummary.totalWithdrawn}}</view>
+          </view>
+        </view>
+        <view class="wallet-action" bindtap="goToWallet">申请提现</view>
+        <view class="sub-title">{{timeRange === 'week' ? '本周流水' : (timeRange === 'month' ? '本月流水' : '最近流水')}}</view>
+        <view wx:if="{{recentFlows.length > 0}}">
+          <view class="flow-item" wx:for="{{recentFlows}}" wx:key="id">
+            <view>
+              <view class="flow-title">{{item.title}}</view>
+              <view class="flow-time">{{item.timeText}}</view>
+            </view>
+            <view class="flow-amount {{item.amountClass}}">{{item.amountText}}</view>
+          </view>
+        </view>
+        <view wx:else class="no-data">
+          <text>暂无流水数据</text>
+        </view>
+      </view>
+
+      <view class="category-card">
+        <view class="card-title">咨询领域分布</view>
+        <view class="category-list" wx:if="{{categoryData.length > 0}}">
+          <view class="category-item" wx:for="{{categoryData}}" wx:key="name">
+            <view class="category-header">
+              <view class="category-dot" style="background-color: {{item.color}};"></view>
+              <text class="category-name">{{item.name}}</text>
+              <text class="category-count">{{item.count}}次</text>
+            </view>
+            <view class="category-progress">
+              <view class="category-fill" style="width: {{item.percentage}}%; background-color: {{item.color}};"></view>
+            </view>
+          </view>
+        </view>
+        <view wx:else class="no-data">
+          <text>暂无分类数据</text>
+        </view>
+      </view>
+
+      <view class="bottom-spacing"></view>
+    </block>
+  </scroll-view>
+</view>

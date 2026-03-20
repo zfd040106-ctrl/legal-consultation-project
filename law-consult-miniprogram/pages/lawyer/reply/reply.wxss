@@ -1,0 +1,100 @@
+/* 回复咨询页面样式 */
+.reply-container {
+  min-height: 100vh;
+  background-color: #F5F5F5;
+}
+
+.navbar-class {
+  --td-navbar-bg-color: #FFFFFF;
+}
+
+.main-content {
+  height: calc(100vh - 88rpx - 120rpx);
+  padding-top: 88rpx;
+}
+
+/* 区块卡片 */
+.section-card {
+  background-color: #FFFFFF;
+  margin: 16rpx 24rpx;
+  padding: 24rpx;
+  border-radius: 16rpx;
+}
+
+.section-title {
+  font-size: 30rpx;
+  font-weight: 600;
+  color: #333333;
+  margin-bottom: 16rpx;
+}
+
+.required {
+  color: #FF3B30;
+}
+
+.error-text {
+  font-size: 24rpx;
+  color: #FF3B30;
+  margin-top: 12rpx;
+}
+
+/* 解决方案选项 */
+.solution-option {
+  margin-bottom: 12rpx;
+}
+
+.solution-tips {
+  font-size: 24rpx;
+  color: #999999;
+  padding-left: 48rpx;
+}
+
+/* 提示卡片 */
+.tips-card {
+  background-color: #FFF9E6;
+  margin: 16rpx 24rpx;
+  padding: 24rpx;
+  border-radius: 16rpx;
+}
+
+.tips-title {
+  font-size: 28rpx;
+  font-weight: 500;
+  color: #FF9500;
+  margin-bottom: 16rpx;
+}
+
+.tips-item {
+  font-size: 26rpx;
+  color: #666666;
+  line-height: 1.8;
+}
+
+/* 提交按钮 */
+.submit-bar {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  padding: 24rpx;
+  background-color: #FFFFFF;
+  box-shadow: 0 -4rpx 16rpx rgba(0, 0, 0, 0.05);
+}
+
+/* 底部间距 */
+.bottom-spacing {
+  height: 150rpx;
+}
+
+/* t-textarea 高度调整为原来的两倍 */
+.section-card /deep/ .t-textarea__wrapper {
+  min-height: 240rpx;
+}
+
+.section-card /deep/ .t-textarea__wrapper-inner {
+  min-height: 240rpx;
+}
+
+.section-card /deep/ .t-textarea__wrapper-inner textarea {
+  min-height: 200rpx;
+}

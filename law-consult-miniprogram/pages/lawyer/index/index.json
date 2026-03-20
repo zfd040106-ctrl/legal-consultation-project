@@ -1,0 +1,18 @@
+{
+  "navigationBarTitleText": "律师工作台",
+  "navigationBarBackgroundColor": "#FFFFFF",
+  "navigationBarTextStyle": "black",
+  "navigationStyle": "custom",
+  "usingComponents": {
+    "t-navbar": "tdesign-miniprogram/navbar/navbar",
+    "t-avatar": "tdesign-miniprogram/avatar/avatar",
+    "t-cell": "tdesign-miniprogram/cell/cell",
+    "t-cell-group": "tdesign-miniprogram/cell-group/cell-group",
+    "t-tag": "tdesign-miniprogram/tag/tag",
+    "t-badge": "tdesign-miniprogram/badge/badge",
+    "t-icon": "tdesign-miniprogram/icon/icon",
+    "t-empty": "tdesign-miniprogram/empty/empty",
+    "t-loading": "tdesign-miniprogram/loading/loading",
+    "lawyer-tabbar": "../../../components/LawyerTabBar/LawyerTabBar"
+  }
+}

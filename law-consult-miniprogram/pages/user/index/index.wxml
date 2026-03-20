@@ -1,0 +1,219 @@
+<view class="user-index-container">
+  <t-navbar t-class="navbar-class" title="法律咨询" />
+
+  <scroll-view class="main-content" scroll-y enhanced show-scrollbar="{{false}}">
+    <view class="page-body">
+      <view class="search-card">
+        <t-search
+          placeholder="搜索律师姓名或擅长领域，发起定向咨询"
+          shape="round"
+          value="{{searchKeyword}}"
+          bind:change="handleSearchChange"
+          bind:submit="handleSearch"
+          bind:action-click="handleSearch"
+          bind:focus="handleSearchFocus"
+        />
+      </view>
+
+      <view class="carousel-card" wx:if="{{carouselItems.length > 0}}">
+        <swiper
+          class="banner-swiper"
+          indicator-dots
+          autoplay
+          circular
+          interval="4000"
+          duration="400"
+        >
+          <swiper-item wx:for="{{carouselItems}}" wx:key="id" wx:for-index="index">
+            <view class="banner-item" bindtap="handleCarouselTap" data-item="{{item}}">
+              <image
+                class="banner-image"
+                src="{{item.displayImageUrl || item.imageUrl}}"
+                mode="aspectFill"
+                binderror="handleCarouselImageError"
+                data-index="{{index}}"
+              />
+              <view class="banner-mask">
+                <view class="banner-category">{{item.category || '法律专题'}}</view>
+                <view class="banner-title">{{item.title}}</view>
+                <view class="banner-summary">{{item.summary || item.content}}</view>
+              </view>
+            </view>
+          </swiper-item>
+        </swiper>
+      </view>
+
+      <view class="quick-card">
+        <view class="quick-actions">
+          <view class="action-item" bindtap="goToConsultation">
+            <view class="action-icon consultation-icon">
+              <t-icon name="chat" size="48rpx" />
+            </view>
+            <view class="action-text">发起咨询</view>
+          </view>
+          <view class="action-item" bindtap="goToAiChat">
+            <view class="action-icon ai-icon">
+              <t-icon name="service" size="48rpx" />
+            </view>
+            <view class="action-text">AI咨询</view>
+          </view>
+          <view class="action-item" bindtap="goToProfile">
+            <view class="action-icon profile-icon">
+              <t-icon name="user" size="48rpx" />
+            </view>
+            <view class="action-text">个人中心</view>
+          </view>
+          <view class="action-item" bindtap="goToComplaint">
+            <view class="action-icon complaint-icon">
+              <t-icon name="edit" size="48rpx" />
+            </view>
+            <view class="action-text">投诉建议</view>
+          </view>
+        </view>
+      </view>
+
+      <view class="section-card">
+        <view class="section-header">
+          <view>
+            <view class="section-title">我的咨询</view>
+            <view class="section-desc">展示最近咨询标题、状态和更新时间</view>
+          </view>
+          <view class="section-more" bindtap="goToConsultationList">
+            <text>全部</text>
+            <t-icon name="chevron-right" size="28rpx" />
+          </view>
+        </view>
+
+        <view class="loading-wrapper" wx:if="{{loading}}">
+          <t-loading theme="circular" size="40rpx" text="加载中..." />
+        </view>
+
+        <view class="consultation-list" wx:elif="{{consultations.length > 0}}">
+          <view
+            class="consultation-card"
+            wx:for="{{consultations}}"
+            wx:key="id"
+            bindtap="goToConsultationDetail"
+            data-id="{{item.id}}"
+          >
+            <view class="consultation-card-header">
+              <view class="consultation-card-tags">
+                <t-tag size="small" variant="light" theme="primary">{{item.categoryText}}</t-tag>
+                <t-tag
+                  wx:if="{{item.priority === 'high'}}"
+                  size="small"
+                  variant="light"
+                  theme="danger"
+                >
+                  紧急
+                </t-tag>
+                <t-tag size="small" variant="light" theme="{{item.assignmentTypeTheme}}">
+                  {{item.assignmentTypeText}}
+                </t-tag>
+              </view>
+              <t-tag size="small" variant="light" theme="{{item.statusTheme}}">
+                {{item.statusText}}
+              </t-tag>
+            </view>
+
+            <view class="consultation-title">{{item.title}}</view>
+
+            <view class="consultation-desc" wx:if="{{item.content}}">
+              {{item.content}}
+            </view>
+
+            <view class="consultation-card-footer">
+              <view class="consultation-time">
+                <t-icon name="time" size="22rpx" color="#94A3B8" />
+                <text>{{item.timeText}}</text>
+              </view>
+              <view class="consultation-reply" wx:if="{{item.replyCount > 0}}">
+                <t-icon name="chat" size="22rpx" color="#4F46E5" />
+                <text>{{item.replyCount}}条回复</text>
+              </view>
+            </view>
+
+            <view class="consultation-lawyer" wx:if="{{item.lawyerName}}">
+              <view class="consultation-lawyer-avatar">
+                <t-icon name="user" size="24rpx" color="#3D55E6" />
+              </view>
+              <text class="consultation-lawyer-name">{{item.lawyerName}}</text>
+              <text class="consultation-lawyer-label">负责律师</text>
+            </view>
+          </view>
+        </view>
+
+        <view class="empty-wrapper" wx:else>
+          <t-empty description="暂无咨询记录">
+            <view slot="action" class="empty-action" bindtap="goToConsultation">
+              立即咨询
+            </view>
+          </t-empty>
+        </view>
+      </view>
+
+      <view class="section-card" wx:if="{{pinnedAnnouncement}}">
+        <view class="section-header">
+          <view>
+            <view class="section-title">置顶公告</view>
+            <view class="section-desc">优先展示管理员设置的置顶公告</view>
+          </view>
+        </view>
+
+        <view class="announcement-item pinned-announcement" bindtap="handleAnnouncementTap" data-item="{{pinnedAnnouncement}}">
+          <view class="announcement-top">
+            <view class="announcement-title-row">
+              <view class="announcement-title">{{pinnedAnnouncement.title}}</view>
+              <t-tag size="small" variant="light" theme="warning">置顶</t-tag>
+            </view>
+            <view class="announcement-time">{{pinnedAnnouncement.timeText}}</view>
+          </view>
+
+          <view class="announcement-content">{{pinnedAnnouncement.content}}</view>
+
+          <view class="announcement-footer">
+            <view class="announcement-link">查看详情</view>
+            <t-icon name="chevron-right" size="28rpx" color="#94A3B8" />
+          </view>
+        </view>
+      </view>
+
+      <view class="section-card" wx:if="{{featuredAnnouncement && (!pinnedAnnouncement || featuredAnnouncement.id !== pinnedAnnouncement.id)}}">
+        <view class="section-header">
+          <view>
+            <view class="section-title">系统公告</view>
+            <view class="section-desc">仅展示指定公告，点击查看完整内容</view>
+          </view>
+        </view>
+
+        <view class="announcement-item" bindtap="handleAnnouncementTap" data-item="{{featuredAnnouncement}}">
+          <view class="announcement-top">
+            <view class="announcement-title-row">
+              <view class="announcement-title">{{featuredAnnouncement.title}}</view>
+              <t-tag
+                wx:if="{{featuredAnnouncement.isPinned}}"
+                size="small"
+                variant="light"
+                theme="warning"
+              >
+                置顶
+              </t-tag>
+            </view>
+            <view class="announcement-time">{{featuredAnnouncement.timeText}}</view>
+          </view>
+
+          <view class="announcement-content">{{featuredAnnouncement.content}}</view>
+
+          <view class="announcement-footer">
+            <view class="announcement-link">查看详情</view>
+            <t-icon name="chevron-right" size="28rpx" color="#94A3B8" />
+          </view>
+        </view>
+      </view>
+
+      <view class="bottom-spacing"></view>
+    </view>
+  </scroll-view>
+
+  <user-tabbar activeTab="index" bind:tabchange="handleTabChange" />
+</view>

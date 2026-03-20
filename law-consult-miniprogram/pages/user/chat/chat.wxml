@@ -1,0 +1,220 @@
+<!-- 用户咨询聊天页面 -->
+<view class="chat-container">
+  <!-- 导航栏 -->
+  <view class="navbar-wrapper" style="height: {{statusBarHeight + navBarHeight}}px;">
+    <view class="status-bar" style="height: {{statusBarHeight}}px;"></view>
+    <view class="custom-navbar" style="height: {{navBarHeight}}px;">
+      <view class="navbar-left">
+        <view class="navbar-btn" bindtap="handleBack">
+          <t-icon name="chevron-left" size="48rpx" color="#333" />
+        </view>
+        <view class="navbar-btn" bindtap="showMoreActions">
+          <t-icon name="ellipsis" size="44rpx" color="#333" />
+        </view>
+      </view>
+      <view class="navbar-center">
+        <view class="navbar-title">{{lawyerInfo.name || '律师咨询'}}</view>
+        <view class="navbar-subtitle" wx:if="{{lawyerInfo.firmName}}">{{lawyerInfo.firmName}}</view>
+      </view>
+      <view class="navbar-right">
+      </view>
+    </view>
+  </view>
+
+  <!-- 咨询信息条 -->
+  <view class="info-bar" style="top: {{statusBarHeight + navBarHeight}}px;">
+    <view class="info-tags">
+      <t-tag theme="primary" size="small" variant="light">{{consultation.category || '法律咨询'}}</t-tag>
+      <t-tag
+        wx:if="{{consultation.status === 'in_progress'}}"
+        theme="primary"
+        size="small"
+        variant="light"
+      >处理中</t-tag>
+      <t-tag
+        wx:elif="{{consultation.status === 'resolved'}}"
+        theme="success"
+        size="small"
+        variant="light"
+      >已解决</t-tag>
+      <t-tag
+        wx:elif="{{consultation.status === 'open'}}"
+        theme="warning"
+        size="small"
+        variant="light"
+      >等待接单</t-tag>
+      <!-- 确认状态提示 -->
+      <t-tag
+        wx:if="{{userConfirmedResolved && !lawyerConfirmedResolved && consultation.status !== 'resolved'}}"
+        theme="warning"
+        size="small"
+        variant="light"
+      >您已请求结束</t-tag>
+      <t-tag
+        wx:if="{{lawyerConfirmedResolved && !userConfirmedResolved && consultation.status !== 'resolved'}}"
+        theme="warning"
+        size="small"
+        variant="light"
+      >律师请求结束</t-tag>
+    </view>
+    <!-- 律师请求结束时显示确认按钮 -->
+    <view wx:if="{{lawyerConfirmedResolved && !userConfirmedResolved && consultation.status !== 'resolved'}}" style="margin-left: 12rpx;">
+      <t-button size="small" theme="primary" bindtap="confirmResolve">确认</t-button>
+    </view>
+  </view>
+
+  <!-- 聊天区域 -->
+  <scroll-view
+    class="chat-area"
+    scroll-y
+    enhanced
+    show-scrollbar="{{false}}"
+    scroll-into-view="{{scrollToView}}"
+    scroll-with-animation
+    style="top: {{statusBarHeight + navBarHeight + 40}}px; bottom: {{inputAreaHeight + bottomSafeHeight}}px;"
+  >
+    <!-- 加载中 -->
+    <view class="loading-section" wx:if="{{loading}}">
+      <t-loading theme="circular" size="40rpx" text="加载中..." />
+    </view>
+
+    <!-- 消息列表 -->
+    <view class="message-list" wx:if="{{!loading}}">
+      <!-- 咨询原始问题（用户自己发的，显示在右侧） -->
+      <view class="message-item self-message" id="msg-0">
+        <view class="message-content">
+          <view class="message-bubble">
+            <view class="question-title">{{consultation.title}}</view>
+            <text>{{consultation.description}}</text>
+          </view>
+          <view class="message-time">{{consultation.createdAtText}}</view>
+        </view>
+        <view class="message-avatar">
+          <t-avatar
+            image="{{userInfo.avatar || ''}}"
+            icon="{{!userInfo.avatar ? 'user' : ''}}"
+            size="40px"
+          />
+        </view>
+      </view>
+
+      <!-- 等待接单提示 -->
+      <view class="system-message" wx:if="{{!consultation.lawyerId && consultation.status === 'open'}}">
+        <view class="system-bubble">等待律师接单中...</view>
+      </view>
+
+      <!-- 律师接单提示 -->
+      <view class="system-message" wx:if="{{consultation.lawyerId && messages.length === 0}}">
+        <view class="system-bubble">律师 {{lawyerInfo.name || ''}} 已接受您的咨询</view>
+      </view>
+
+      <!-- 回复列表 -->
+      <view
+        class="message-item {{item.isLawyer ? 'other-message' : 'self-message'}}"
+        wx:for="{{messages}}"
+        wx:key="id"
+        id="msg-{{item.id}}"
+      >
+        <!-- 对方（律师）头像在左侧 -->
+        <view class="message-avatar" wx:if="{{item.isLawyer}}">
+          <t-avatar
+            image="{{lawyerInfo.avatar || ''}}"
+            icon="{{!lawyerInfo.avatar ? 'user' : ''}}"
+            size="40px"
+          />
+        </view>
+        <view class="message-content">
+          <!-- 对方（律师）名字 -->
+          <view class="message-sender" wx:if="{{item.isLawyer}}">{{lawyerInfo.name || '律师'}}</view>
+          <view class="message-bubble">
+            <text>{{item.content}}</text>
+          </view>
+          <view class="message-meta">
+            <view class="message-time">{{item.timeText}}</view>
+            <t-tag wx:if="{{item.isSolution}}" theme="success" size="small" variant="light">解决方案</t-tag>
+          </view>
+        </view>
+        <!-- 自己（用户）头像在右侧 -->
+        <view class="message-avatar" wx:if="{{!item.isLawyer}}">
+          <t-avatar
+            image="{{userInfo.avatar || ''}}"
+            icon="{{!userInfo.avatar ? 'user' : ''}}"
+            size="40px"
+          />
+        </view>
+      </view>
+
+      <!-- 正在发送（自己发送，在右侧） -->
+      <view class="message-item self-message" wx:if="{{isSending}}">
+        <view class="message-content">
+          <view class="message-bubble typing">
+            <view class="typing-dots">
+              <view class="dot"></view>
+              <view class="dot"></view>
+              <view class="dot"></view>
+            </view>
+          </view>
+        </view>
+        <view class="message-avatar">
+          <t-avatar
+            image="{{userInfo.avatar || ''}}"
+            icon="{{!userInfo.avatar ? 'user' : ''}}"
+            size="40px"
+          />
+        </view>
+      </view>
+    </view>
+
+    <!-- 底部占位 -->
+    <view class="chat-bottom-spacing" id="chat-bottom"></view>
+  </scroll-view>
+
+  <!-- 输入区域 -->
+  <view class="input-area" wx:if="{{consultation.lawyerId && consultation.status !== 'resolved'}}">
+    <view class="input-wrapper">
+      <input
+        class="message-input"
+        placeholder="输入追问内容..."
+        value="{{inputValue}}"
+        bindinput="handleInput"
+        bindconfirm="sendMessage"
+        confirm-type="send"
+        disabled="{{isSending}}"
+      />
+    </view>
+    <view class="send-btn {{inputValue ? 'active' : ''}}" bindtap="sendMessage">
+      <t-icon name="send" size="40rpx" color="{{inputValue ? '#FFFFFF' : '#CCCCCC'}}" />
+    </view>
+  </view>
+
+  <!-- 等待对方确认状态提示 -->
+  <view class="resolve-pending-bar" wx:if="{{userConfirmedResolved && !lawyerConfirmedResolved && consultation.status !== 'resolved'}}">
+    <t-icon name="time" size="32rpx" color="#FF9500" />
+    <text>您已请求结束咨询，等待律师确认...</text>
+  </view>
+
+  <!-- 对方请求确认提示 -->
+  <view class="resolve-request-bar" wx:if="{{lawyerConfirmedResolved && !userConfirmedResolved && consultation.status !== 'resolved'}}">
+    <view class="resolve-request-content">
+      <view class="resolve-request-text">
+        <t-icon name="info-circle" size="28rpx" color="#FF9500" />
+        <text>律师请求结束咨询</text>
+      </view>
+      <t-button size="small" theme="primary" bindtap="confirmResolve">确认解决</t-button>
+    </view>
+  </view>
+
+  <!-- 等待接单状态提示 -->
+  <view class="waiting-bar" wx:if="{{!consultation.lawyerId && consultation.status === 'open'}}">
+    <t-icon name="time" size="32rpx" color="#FF9500" />
+    <text>等待律师接单中，请耐心等待...</text>
+  </view>
+
+  <!-- 已解决状态提示 -->
+  <view class="closed-bar" wx:if="{{consultation.status === 'resolved'}}">
+    <text>咨询已解决</text>
+  </view>
+
+  <!-- Toast -->
+  <t-toast id="t-toast" />
+</view>

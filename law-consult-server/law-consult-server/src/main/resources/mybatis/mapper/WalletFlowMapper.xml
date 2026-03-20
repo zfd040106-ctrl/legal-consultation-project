@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.example.lawconsultserver.mapper.WalletFlowMapper">
+
+    <resultMap id="WalletFlowResult" type="com.example.lawconsultserver.entity.WalletFlow">
+        <id column="id" property="id"/>
+        <result column="owner_type" property="ownerType"/>
+        <result column="owner_id" property="ownerId"/>
+        <result column="biz_type" property="bizType"/>
+        <result column="biz_id" property="bizId"/>
+        <result column="direction" property="direction"/>
+        <result column="amount" property="amount"/>
+        <result column="status" property="status"/>
+        <result column="balance_after" property="balanceAfter"/>
+        <result column="remark" property="remark"/>
+        <result column="operator_id" property="operatorId"/>
+        <result column="created_at" property="createdAt"/>
+    </resultMap>
+
+    <insert id="insertFlow" parameterType="com.example.lawconsultserver.entity.WalletFlow" useGeneratedKeys="true" keyProperty="id">
+        INSERT INTO wallet_flows (
+            owner_type, owner_id, biz_type, biz_id, direction, amount, status, balance_after, remark, operator_id, created_at
+        )
+        VALUES (
+            #{ownerType}, #{ownerId}, #{bizType}, #{bizId}, #{direction}, #{amount}, #{status}, #{balanceAfter}, #{remark}, #{operatorId}, NOW()
+        )
+    </insert>
+
+    <select id="selectByOwner" resultMap="WalletFlowResult">
+        SELECT *
+        FROM wallet_flows
+        WHERE owner_type = #{ownerType} AND owner_id = #{ownerId}
+        ORDER BY created_at DESC, id DESC
+        LIMIT #{offset}, #{limit}
+    </select>
+
+    <select id="countByOwner" resultType="long">
+        SELECT COUNT(*)
+        FROM wallet_flows
+        WHERE owner_type = #{ownerType} AND owner_id = #{ownerId}
+    </select>
+
+    <select id="sumAmountByDirection" resultType="java.math.BigDecimal">
+        SELECT COALESCE(SUM(amount), 0)
+        FROM wallet_flows
+        WHERE owner_type = #{ownerType}
+          AND owner_id = #{ownerId}
+          AND direction = #{direction}
+          AND status = 'success'
+    </select>
+
+</mapper>

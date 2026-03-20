@@ -1,0 +1,66 @@
+<view class="find-lawyer-container">
+  <t-navbar
+    t-class="navbar-class"
+    title="找律师"
+    left-arrow
+    bind:go-back="handleBack"
+  />
+
+  <view class="search-wrapper">
+    <t-search
+      placeholder="搜索律师姓名、擅长领域或律所"
+      value="{{keyword}}"
+      bind:change="handleSearchChange"
+      bind:submit="handleSearch"
+      bind:clear="handleClear"
+      bind:action-click="handleSearch"
+    />
+  </view>
+
+  <scroll-view class="list-scroll" scroll-y bindscrolltolower="loadMore">
+    <view class="loading-wrapper" wx:if="{{loading}}">
+      <t-loading theme="circular" size="40rpx" text="加载中..." />
+    </view>
+
+    <block wx:elif="{{lawyers.length > 0}}">
+      <view class="lawyer-card" wx:for="{{lawyers}}" wx:key="userId">
+        <view class="lawyer-main">
+          <view class="avatar-wrapper">
+            <image wx:if="{{item.avatar}}" class="lawyer-avatar" src="{{item.avatar}}" mode="aspectFill" />
+            <view wx:else class="avatar-fallback">
+              <t-icon name="user" size="36rpx" color="#64748B" />
+            </view>
+          </view>
+          <view class="lawyer-content">
+            <view class="lawyer-name-row">
+              <view class="lawyer-name">{{item.username}}</view>
+              <t-icon name="chevron-right" size="28rpx" color="#CBD5E1" />
+            </view>
+            <view class="lawyer-firm">{{item.firmName || '律所信息待补充'}}</view>
+            <view class="tag-row">
+              <t-tag size="small" variant="light" theme="primary">{{item.specializationText}}</t-tag>
+              <t-tag size="small" variant="light" theme="success">{{item.experienceText}}</t-tag>
+            </view>
+            <view class="lawyer-footer">
+              <view class="consult-count">累计咨询 {{item.totalConsultationsText}}</view>
+              <view class="consult-action" bindtap="goToConsultation" data-id="{{item.userId}}">
+                向 TA 发起咨询
+              </view>
+            </view>
+          </view>
+        </view>
+      </view>
+
+      <view class="load-more" wx:if="{{loadingMore}}">
+        <t-loading theme="circular" size="32rpx" text="加载更多..." />
+      </view>
+      <view class="load-more done" wx:elif="{{!hasMore}}">
+        已经到底了
+      </view>
+    </block>
+
+    <view class="empty-wrapper" wx:else>
+      <t-empty icon="user" description="未找到匹配律师" />
+    </view>
+  </scroll-view>
+</view>

@@ -1,0 +1,118 @@
+.find-lawyer-container {
+  min-height: 100vh;
+  background-color: #F5F5F5;
+  display: flex;
+  flex-direction: column;
+}
+
+.navbar-class {
+  --td-navbar-bg-color: #FFFFFF;
+}
+
+.search-wrapper {
+  padding: 16rpx 24rpx;
+  background-color: #FFFFFF;
+}
+
+.list-scroll {
+  flex: 1;
+}
+
+.loading-wrapper,
+.load-more,
+.empty-wrapper {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 48rpx 0;
+}
+
+.load-more {
+  font-size: 26rpx;
+  color: #94A3B8;
+}
+
+.load-more.done {
+  padding-top: 12rpx;
+}
+
+.lawyer-card {
+  margin: 16rpx 24rpx 0;
+  background-color: #FFFFFF;
+  border-radius: 20rpx;
+  padding: 24rpx;
+}
+
+.lawyer-main {
+  display: flex;
+  align-items: flex-start;
+}
+
+.avatar-wrapper {
+  width: 92rpx;
+  height: 92rpx;
+  flex-shrink: 0;
+}
+
+.lawyer-avatar,
+.avatar-fallback {
+  width: 100%;
+  height: 100%;
+  border-radius: 50%;
+}
+
+.avatar-fallback {
+  background-color: #E2E8F0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.lawyer-content {
+  flex: 1;
+  margin-left: 20rpx;
+  min-width: 0;
+}
+
+.lawyer-name-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.lawyer-name {
+  font-size: 30rpx;
+  font-weight: 600;
+  color: #0F172A;
+}
+
+.lawyer-firm {
+  margin-top: 8rpx;
+  font-size: 25rpx;
+  color: #64748B;
+}
+
+.tag-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12rpx;
+  margin-top: 16rpx;
+}
+
+.lawyer-footer {
+  margin-top: 20rpx;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.consult-count {
+  font-size: 24rpx;
+  color: #94A3B8;
+}
+
+.consult-action {
+  font-size: 26rpx;
+  color: #2563EB;
+  font-weight: 600;
+}

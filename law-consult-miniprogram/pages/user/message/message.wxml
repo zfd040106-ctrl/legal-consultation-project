@@ -1,0 +1,211 @@
+<view class="message-container">
+  <t-navbar
+    t-class="navbar-class"
+    title="消息"
+  />
+
+  <view class="main-content">
+    <t-tabs
+      t-class="message-tabs"
+      value="{{activeTab}}"
+      bind:change="handleTabChange"
+    >
+      <t-tab-panel label="进行中" value="active" />
+      <t-tab-panel label="历史咨询" value="history" />
+      <t-tab-panel label="系统通知" value="system" />
+    </t-tabs>
+
+    <scroll-view
+      class="message-list"
+      scroll-y
+      bindscrolltolower="loadMore"
+      refresher-enabled
+      refresher-triggered="{{refreshing}}"
+      bindrefresherrefresh="onRefresh"
+    >
+      <view class="loading-wrapper" wx:if="{{loading && ((activeTab === 'active' && activeConsultations.length === 0) || (activeTab === 'history' && historyConsultations.length === 0) || (activeTab === 'system' && systemMessages.length === 0))}}">
+        <t-loading theme="circular" size="40rpx" text="加载中..." />
+      </view>
+
+      <block wx:if="{{activeTab === 'active'}}">
+        <view wx:if="{{activeConsultations.length > 0}}">
+          <view
+            wx:for="{{activeConsultations}}"
+            wx:key="id"
+            class="chat-item"
+            bindtap="goToChat"
+            data-item="{{item}}"
+          >
+            <view class="avatar-wrapper">
+              <t-avatar
+                wx:if="{{!item.lawyerAvatar}}"
+                icon="user"
+                size="96rpx"
+              />
+              <image
+                wx:else
+                class="avatar"
+                src="{{item.lawyerAvatar}}"
+                mode="aspectFill"
+              />
+              <view class="status-dot {{item.status === 'in_progress' ? 'active' : 'pending'}}"></view>
+            </view>
+
+            <view class="chat-info">
+              <view class="chat-header">
+                <text class="chat-name">{{item.lawyerName || '等待律师接单'}}</text>
+                <text class="chat-time">{{item.timeText}}</text>
+              </view>
+              <view class="chat-preview">
+                <text class="preview-text">{{item.previewMessage || item.lastMessage}}</text>
+                <t-tag
+                  theme="{{item.status === 'in_progress' ? 'primary' : 'warning'}}"
+                  size="small"
+                  variant="light"
+                >{{item.statusText}}</t-tag>
+              </view>
+              <view class="chat-title">
+                <t-icon name="chat" size="24rpx" color="#999999" />
+                <text>{{item.previewTitle || item.title}}</text>
+              </view>
+            </view>
+          </view>
+
+          <view class="load-more" wx:if="{{hasMore}}">
+            <t-loading theme="circular" size="32rpx" text="加载更多..." wx:if="{{loading}}" />
+            <text wx:else bindtap="loadMore">点击加载更多</text>
+          </view>
+
+          <view class="no-more" wx:if="{{!hasMore && activeConsultations.length > 0}}">
+            <text>没有更多咨询了</text>
+          </view>
+        </view>
+
+        <view class="empty-wrapper" wx:elif="{{!loading}}">
+          <t-empty
+            icon="chat"
+            description="暂无进行中的咨询"
+          />
+          <view class="empty-action">
+            <t-button theme="primary" size="small" bindtap="goToConsult">发起咨询</t-button>
+          </view>
+        </view>
+      </block>
+
+      <block wx:if="{{activeTab === 'history'}}">
+        <view wx:if="{{historyConsultations.length > 0}}">
+          <t-swipe-cell
+            wx:for="{{historyConsultations}}"
+            wx:key="id"
+            right="{{[{text: '删除', className: 'delete-btn'}]}}"
+            bind:click="handleSwipeClick"
+            data-id="{{item.id}}"
+          >
+            <view
+              class="chat-item history"
+              bindtap="goToChat"
+              data-item="{{item}}"
+            >
+              <view class="avatar-wrapper">
+                <t-avatar
+                  wx:if="{{!item.lawyerAvatar}}"
+                  icon="user"
+                  size="96rpx"
+                />
+                <image
+                  wx:else
+                  class="avatar"
+                  src="{{item.lawyerAvatar}}"
+                  mode="aspectFill"
+                />
+              </view>
+
+              <view class="chat-info">
+                <view class="chat-header">
+                  <text class="chat-name">{{item.lawyerName || '律师'}}</text>
+                  <text class="chat-time">{{item.timeText}}</text>
+                </view>
+                <view class="chat-preview">
+                  <text class="preview-text">{{item.previewMessage || item.lastMessage}}</text>
+                  <t-tag
+                    theme="{{item.status === 'resolved' ? 'success' : 'default'}}"
+                    size="small"
+                    variant="light"
+                  >{{item.statusText}}</t-tag>
+                </view>
+                <view class="chat-title">
+                  <t-icon name="chat" size="24rpx" color="#999999" />
+                  <text>{{item.previewTitle || item.title}}</text>
+                </view>
+              </view>
+            </view>
+          </t-swipe-cell>
+
+          <view class="load-more" wx:if="{{hasMore}}">
+            <t-loading theme="circular" size="32rpx" text="加载更多..." wx:if="{{loading}}" />
+            <text wx:else bindtap="loadMore">点击加载更多</text>
+          </view>
+
+          <view class="no-more" wx:if="{{!hasMore && historyConsultations.length > 0}}">
+            <text>没有更多历史咨询了</text>
+          </view>
+        </view>
+
+        <view class="empty-wrapper" wx:elif="{{!loading}}">
+          <t-empty
+            icon="time"
+            description="暂无历史咨询记录"
+          />
+        </view>
+      </block>
+
+      <block wx:if="{{activeTab === 'system'}}">
+        <view wx:if="{{systemMessages.length > 0}}">
+          <view
+            class="notification-item {{item.isRead ? '' : 'unread'}}"
+            wx:for="{{systemMessages}}"
+            wx:key="id"
+            bindtap="handleSystemMessageClick"
+            data-message="{{item}}"
+          >
+            <view class="item-header">
+              <view class="item-title">{{item.title}}</view>
+            </view>
+
+            <view class="item-content">{{item.content}}</view>
+
+            <view class="item-footer">
+              <view class="notification-type">
+                <t-icon name="notification" size="20rpx" color="#999999" />
+                <text>{{item.type || '系统通知'}}</text>
+              </view>
+              <text class="time-text">{{item.timeText}}</text>
+            </view>
+          </view>
+
+          <view class="load-more" wx:if="{{hasMore}}">
+            <t-loading theme="circular" size="32rpx" text="加载更多..." wx:if="{{loading}}" />
+            <text wx:else bindtap="loadMore">点击加载更多</text>
+          </view>
+
+          <view class="no-more" wx:if="{{!hasMore && systemMessages.length > 0}}">
+            <text>没有更多系统通知了</text>
+          </view>
+        </view>
+
+        <view class="empty-wrapper" wx:elif="{{!loading}}">
+          <t-empty
+            icon="notification"
+            description="暂无系统通知"
+          />
+        </view>
+      </block>
+
+      <view class="bottom-spacing"></view>
+    </scroll-view>
+  </view>
+
+  <t-toast id="t-toast" />
+
+  <user-tabbar activeTab="message" unreadCount="{{unreadCount}}" bind:tabchange="handleTabChangeNav" />
+</view>

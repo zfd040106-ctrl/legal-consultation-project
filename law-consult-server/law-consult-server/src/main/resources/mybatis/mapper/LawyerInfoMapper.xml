@@ -1,0 +1,121 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.example.lawconsultserver.mapper.LawyerInfoMapper">
+
+    <resultMap id="LawyerInfoResult" type="com.example.lawconsultserver.entity.LawyerInfo">
+        <id column="id" property="id"/>
+        <result column="user_id" property="userId"/>
+        <result column="license_number" property="licenseNumber"/>
+        <result column="firm_name" property="firmName"/>
+        <result column="specialization" property="specialization"/>
+        <result column="experience_years" property="experienceYears"/>
+        <result column="total_consultations" property="totalConsultations"/>
+        <result column="created_at" property="createdAt"/>
+        <result column="updated_at" property="updatedAt"/>
+    </resultMap>
+
+    <resultMap id="LawyerSearchItemResult" type="com.example.lawconsultserver.entity.LawyerSearchItem">
+        <id column="user_id" property="userId"/>
+        <result column="username" property="username"/>
+        <result column="avatar" property="avatar"/>
+        <result column="firm_name" property="firmName"/>
+        <result column="specialization" property="specialization"/>
+        <result column="experience_years" property="experienceYears"/>
+        <result column="total_consultations" property="totalConsultations"/>
+    </resultMap>
+
+    <insert id="insertLawyerInfo" parameterType="com.example.lawconsultserver.entity.LawyerInfo" useGeneratedKeys="true" keyProperty="id">
+        INSERT INTO lawyer_info (user_id, license_number, firm_name, specialization, experience_years, created_at, updated_at)
+        VALUES (#{userId}, #{licenseNumber}, #{firmName}, #{specialization}, #{experienceYears}, NOW(), NOW())
+    </insert>
+
+    <select id="selectByUserId" parameterType="int" resultMap="LawyerInfoResult">
+        SELECT * FROM lawyer_info WHERE user_id = #{userId}
+    </select>
+
+    <select id="selectAll" resultMap="LawyerInfoResult">
+        SELECT * FROM lawyer_info
+        ORDER BY created_at DESC
+        LIMIT #{offset}, #{limit}
+    </select>
+
+    <select id="countAll" resultType="long">
+        SELECT COUNT(*) FROM lawyer_info
+    </select>
+
+    <update id="updateLawyerInfo" parameterType="com.example.lawconsultserver.entity.LawyerInfo">
+        UPDATE lawyer_info
+        <set>
+            <if test="licenseNumber != null">license_number = #{licenseNumber},</if>
+            <if test="firmName != null">firm_name = #{firmName},</if>
+            <if test="specialization != null">specialization = #{specialization},</if>
+            <if test="experienceYears != null">experience_years = #{experienceYears},</if>
+            <if test="totalConsultations != null">total_consultations = #{totalConsultations},</if>
+            updated_at = NOW()
+        </set>
+        WHERE id = #{id}
+    </update>
+
+    <select id="searchActiveLawyers" resultMap="LawyerSearchItemResult">
+        SELECT u.id AS user_id,
+               u.username,
+               u.avatar,
+               li.firm_name,
+               li.specialization,
+               li.experience_years,
+               li.total_consultations
+        FROM users u
+        INNER JOIN lawyer_info li ON u.id = li.user_id
+        WHERE u.role = 'lawyer'
+          AND u.status = 'active'
+        <if test="keyword != null and keyword != ''">
+            AND (
+                u.username LIKE CONCAT('%', #{keyword}, '%')
+                OR li.specialization LIKE CONCAT('%', #{keyword}, '%')
+                OR li.firm_name LIKE CONCAT('%', #{keyword}, '%')
+            )
+        </if>
+        ORDER BY li.total_consultations DESC, li.experience_years DESC, li.updated_at DESC
+        LIMIT #{offset}, #{limit}
+    </select>
+
+    <select id="countActiveLawyers" resultType="long">
+        SELECT COUNT(*)
+        FROM users u
+        INNER JOIN lawyer_info li ON u.id = li.user_id
+        WHERE u.role = 'lawyer'
+          AND u.status = 'active'
+        <if test="keyword != null and keyword != ''">
+            AND (
+                u.username LIKE CONCAT('%', #{keyword}, '%')
+                OR li.specialization LIKE CONCAT('%', #{keyword}, '%')
+                OR li.firm_name LIKE CONCAT('%', #{keyword}, '%')
+            )
+        </if>
+    </select>
+
+    <select id="selectSearchItemByUserId" resultMap="LawyerSearchItemResult">
+        SELECT u.id AS user_id,
+               u.username,
+               u.avatar,
+               li.firm_name,
+               li.specialization,
+               li.experience_years,
+               li.total_consultations
+        FROM users u
+        INNER JOIN lawyer_info li ON u.id = li.user_id
+        WHERE u.id = #{userId}
+          AND u.role = 'lawyer'
+          AND u.status = 'active'
+        LIMIT 1
+    </select>
+
+    <update id="incrementTotalConsultations">
+        UPDATE lawyer_info
+        SET total_consultations = COALESCE(total_consultations, 0) + 1,
+            updated_at = NOW()
+        WHERE user_id = #{userId}
+    </update>
+
+</mapper>

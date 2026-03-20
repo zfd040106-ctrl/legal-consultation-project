@@ -1,0 +1,189 @@
+<view class="consultation-container">
+  <t-navbar
+    t-class="navbar-class"
+    title="发起咨询"
+    left-arrow
+    bind:go-back="handleBack"
+  />
+
+  <scroll-view class="form-content" scroll-y enhanced show-scrollbar="{{false}}">
+    <view class="form-section" wx:if="{{selectedLawyer}}">
+      <view class="section-label">指定律师</view>
+      <view class="lawyer-card">
+        <view class="lawyer-info">
+          <view class="lawyer-avatar">
+            <image wx:if="{{selectedLawyer.avatar}}" class="lawyer-avatar-image" src="{{selectedLawyer.avatar}}" mode="aspectFill" />
+            <t-icon wx:else name="user" size="36rpx" color="#2563EB" />
+          </view>
+          <view class="lawyer-detail">
+            <view class="lawyer-name">{{selectedLawyer.username}}</view>
+            <view class="lawyer-meta">{{selectedLawyer.specialization || '专业领域待补充'}}</view>
+            <view class="lawyer-meta">{{selectedLawyer.firmName || '律师事务所待补充'}}</view>
+          </view>
+        </view>
+        <view class="lawyer-switch" bindtap="clearSelectedLawyer">改为公开咨询</view>
+      </view>
+    </view>
+
+    <view class="form-section" wx:else>
+      <view class="section-label">定向咨询</view>
+      <view class="selection-entry" bindtap="goToFindLawyer">
+        <view>
+          <view class="selection-title">搜索律师并发起定向咨询</view>
+          <view class="selection-subtitle">可按律师姓名、擅长领域或律所搜索</view>
+        </view>
+        <t-icon name="chevron-right" size="32rpx" color="#999999" />
+      </view>
+    </view>
+
+    <view class="form-section payment-section">
+      <view class="section-label">支付信息</view>
+      <view class="payment-row">
+        <view class="payment-label">咨询服务费</view>
+        <view class="payment-input-wrapper">
+          <t-input
+            class="fee-input"
+            type="number"
+            placeholder="请输入服务费"
+            value="{{form.feeAmount}}"
+            borderless
+            bind:change="handleFeeInput"
+          />
+        </view>
+      </view>
+      <view class="payment-tips">最低服务费 ¥9.9</view>
+      <view class="payment-row wallet-row">
+        <view class="payment-label">钱包余额</view>
+        <view class="wallet-balance">¥{{walletSummary.availableBalance}}</view>
+      </view>
+      <view class="wallet-button" bindtap="goToWallet">去钱包中心</view>
+      <view wx:if="{{errors.feeAmount}}" class="error-text">{{errors.feeAmount}}</view>
+    </view>
+
+    <view class="form-section">
+      <t-input
+        class="form-input"
+        label="咨询标题"
+        layout="vertical"
+        placeholder="请简要描述您的法律问题"
+        value="{{form.title}}"
+        bind:change="handleTitleInput"
+        status="{{errors.title ? 'error' : ''}}"
+        tips="{{errors.title || ''}}"
+        maxlength="50"
+      />
+    </view>
+
+    <view class="form-section">
+      <view class="section-label">问题分类 <text class="required">*</text></view>
+      <view class="category-list">
+        <view
+          class="category-tag {{form.category === item ? 'active' : ''}}"
+          wx:for="{{categories}}"
+          wx:key="*this"
+          bindtap="selectCategory"
+          data-category="{{item}}"
+        >
+          {{item}}
+        </view>
+      </view>
+      <view wx:if="{{errors.category}}" class="error-text">{{errors.category}}</view>
+    </view>
+
+    <view class="form-section">
+      <view class="section-label">紧急程度</view>
+      <view class="priority-list">
+        <view
+          class="priority-item {{form.priority === 'low' ? 'active' : ''}}"
+          bindtap="selectPriority"
+          data-priority="low"
+        >
+          <view class="priority-dot low"></view>
+          <text>一般</text>
+        </view>
+        <view
+          class="priority-item {{form.priority === 'medium' ? 'active' : ''}}"
+          bindtap="selectPriority"
+          data-priority="medium"
+        >
+          <view class="priority-dot medium"></view>
+          <text>较急</text>
+        </view>
+        <view
+          class="priority-item {{form.priority === 'high' ? 'active' : ''}}"
+          bindtap="selectPriority"
+          data-priority="high"
+        >
+          <view class="priority-dot high"></view>
+          <text>紧急</text>
+        </view>
+      </view>
+    </view>
+
+    <view class="form-section">
+      <view class="section-label">问题描述 <text class="required">*</text></view>
+      <t-textarea
+        class="form-textarea"
+        t-class="textarea-class"
+        placeholder="请详细描述您遇到的法律问题，包含时间、地点、涉事人员和经过等关键信息"
+        value="{{form.content}}"
+        maxlength="2000"
+        indicator
+        autosize
+        style="--td-textarea-background-color: #F8F8F8; --td-textarea-border-radius: 12rpx;"
+        bind:change="handleContentInput"
+      />
+      <view wx:if="{{errors.content}}" class="error-text">{{errors.content}}</view>
+    </view>
+
+    <view class="form-section">
+      <view class="section-label">上传附件 <text class="optional">（选填）</text></view>
+      <view class="upload-tips">可上传与问题相关的图片、合同、证据等文件</view>
+      <view class="upload-area">
+        <view class="upload-list" wx:if="{{form.files.length > 0}}">
+          <view class="upload-item" wx:for="{{form.files}}" wx:key="index">
+            <image
+              wx:if="{{item.type === 'image'}}"
+              class="upload-image"
+              src="{{item.path}}"
+              mode="aspectFill"
+              bindtap="previewImage"
+              data-path="{{item.path}}"
+            />
+            <view wx:else class="upload-file">
+              <t-icon name="file" size="48rpx" />
+              <text class="file-name">{{item.name}}</text>
+            </view>
+            <view class="upload-remove" catchtap="removeFile" data-index="{{index}}">
+              <t-icon name="close" size="24rpx" color="#FFFFFF" />
+            </view>
+          </view>
+        </view>
+        <view class="upload-add" bindtap="chooseFile" wx:if="{{form.files.length < 9}}">
+          <t-icon name="add" size="48rpx" color="#999999" />
+          <text>添加文件</text>
+        </view>
+      </view>
+    </view>
+
+    <view class="submit-section">
+      <t-button
+        theme="primary"
+        block
+        loading="{{loading}}"
+        disabled="{{loading}}"
+        bindtap="handleSubmit"
+      >
+        {{loading ? '提交中...' : (form.feeAmount && form.feeAmount !== '0' && form.feeAmount !== '0.00' ? '确认并支付' : '提交咨询')}}
+      </t-button>
+      <view class="submit-tips">
+        <t-icon name="info-circle" size="24rpx" />
+        <text>提交后将由专业律师为您解答，有偿咨询会先进行费用托管</text>
+      </view>
+    </view>
+
+    <view class="bottom-spacing"></view>
+  </scroll-view>
+
+  <t-toast id="t-toast" />
+</view>

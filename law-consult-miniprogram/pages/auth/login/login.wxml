@@ -1,0 +1,73 @@
+<!-- 登录页面 -->
+<view class="login-container">
+  <!-- 导航栏 -->
+  <t-navbar
+    t-class="navbar-class"
+    title="在线法律咨询"
+  />
+
+  <!-- 顶部标志区域 -->
+  <view class="login-header">
+    <!-- 装饰图片 -->
+    <image class="header-decoration" src="/assets/images/login-header.png" mode="aspectFill"></image>
+  </view>
+
+  <!-- 登录表单 -->
+  <view class="form-section">
+    <!-- 表单标题 -->
+    <view class="form-title">登录账号</view>
+
+    <!-- 账号输入 -->
+    <t-input
+      class="form-input"
+      label="账号"
+      layout="vertical"
+      placeholder="请输入账号（用户U开头，律师L开头）"
+      value="{{form.account}}"
+      bind:change="handleAccountInput"
+      status="{{errors.account ? 'error' : ''}}"
+      tips="{{errors.account || ''}}"
+    />
+
+    <!-- 密码输入 -->
+    <t-input
+      class="form-input"
+      label="密码"
+      layout="vertical"
+      type="password"
+      placeholder="请输入您的密码"
+      value="{{form.password}}"
+      bind:change="handlePasswordInput"
+      status="{{errors.password ? 'error' : ''}}"
+      tips="{{errors.password || ''}}"
+    />
+
+    <!-- 记住账号复选框 -->
+    <view class="checkbox-group">
+      <checkbox-group bindchange="handleRememberChange">
+        <label class="checkbox-label">
+          <checkbox value="remember" checked="{{form.rememberAccount}}" />
+          <text>记住账号</text>
+        </label>
+      </checkbox-group>
+    </view>
+
+    <!-- 登录按钮 -->
+    <t-button
+      class="login-btn"
+      theme="primary"
+      block
+      loading="{{loading}}"
+      disabled="{{loading}}"
+      bindtap="handleLogin"
+    >
+      {{loading ? '登录中...' : '登录'}}
+    </t-button>
+
+    <!-- 注册链接 -->
+    <view class="register-link">
+      <text>没有账号？</text>
+      <text class="link-text" bindtap="navigateToRegister">立即注册</text>
+    </view>
+  </view>
+</view>

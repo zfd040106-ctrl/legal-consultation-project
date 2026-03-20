@@ -1,0 +1,17 @@
+{
+  "navigationBarTitleText": "咨询详情",
+  "navigationBarBackgroundColor": "#FFFFFF",
+  "navigationBarTextStyle": "black",
+  "navigationStyle": "custom",
+  "usingComponents": {
+    "t-navbar": "tdesign-miniprogram/navbar/navbar",
+    "t-tag": "tdesign-miniprogram/tag/tag",
+    "t-button": "tdesign-miniprogram/button/button",
+    "t-empty": "tdesign-miniprogram/empty/empty",
+    "t-loading": "tdesign-miniprogram/loading/loading",
+    "t-icon": "tdesign-miniprogram/icon/icon",
+    "t-dialog": "tdesign-miniprogram/dialog/dialog",
+    "t-toast": "tdesign-miniprogram/toast/toast",
+    "t-image": "tdesign-miniprogram/image/image"
+  }
+}

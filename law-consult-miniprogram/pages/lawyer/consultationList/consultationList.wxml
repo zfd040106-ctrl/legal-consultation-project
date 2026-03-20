@@ -1,0 +1,125 @@
+<view class="consultation-list-container">
+  <t-navbar
+    t-class="navbar-class"
+    title="咨询管理"
+  />
+
+  <view class="main-content">
+    <view class="search-wrapper">
+      <t-search
+        placeholder="搜索咨询内容"
+        value="{{keyword}}"
+        bind:change="handleSearchChange"
+        bind:submit="handleSearch"
+        bind:clear="handleClear"
+      />
+    </view>
+
+    <t-tabs
+      t-class="status-tabs"
+      value="{{activeTab}}"
+      bind:change="handleTabChange"
+    >
+      <t-tab-panel label="全部" value="all" />
+      <t-tab-panel label="公开待接" value="open" />
+      <t-tab-panel label="定向待接受" value="pending_accept" />
+      <t-tab-panel label="处理中" value="in_progress" />
+      <t-tab-panel label="已解决" value="resolved" />
+    </t-tabs>
+
+    <scroll-view
+      class="list-scroll"
+      scroll-y
+      bindscrolltolower="loadMore"
+      refresher-enabled
+      refresher-triggered="{{refreshing}}"
+      bindrefresherrefresh="onRefresh"
+    >
+      <view class="loading-wrapper" wx:if="{{loading && consultations.length === 0}}">
+        <t-loading theme="circular" size="40rpx" text="加载中..." />
+      </view>
+
+      <view wx:elif="{{consultations.length > 0}}">
+        <view
+          class="consultation-item"
+          wx:for="{{consultations}}"
+          wx:key="id"
+          bindtap="goToDetail"
+          data-id="{{item.id}}"
+        >
+          <view class="item-header">
+            <view class="item-title">{{item.title}}</view>
+            <view class="item-header-right">
+              <t-tag
+                theme="{{statusTheme[item.status]}}"
+                size="small"
+                variant="light"
+              >
+                {{statusText[item.status]}}
+              </t-tag>
+
+              <view class="item-delete" wx:if="{{item.status === 'resolved'}}" catchtap="handleDelete" data-id="{{item.id}}">
+                <t-icon name="delete" size="32rpx" color="#FF3B30" />
+              </view>
+            </view>
+          </view>
+
+          <view class="item-content">{{item.description}}</view>
+
+          <view class="item-meta">
+            <view class="meta-tags">
+              <t-tag theme="primary" size="small" variant="light">{{item.category || '其他'}}</t-tag>
+              <t-tag theme="warning" size="small" variant="light">{{item.assignmentTypeText}}</t-tag>
+              <t-tag
+                wx:if="{{item.priority === 'high'}}"
+                theme="danger"
+                size="small"
+                variant="light"
+              >
+                紧急
+              </t-tag>
+              <t-tag
+                wx:elif="{{item.priority === 'medium'}}"
+                theme="warning"
+                size="small"
+                variant="light"
+              >
+                较急
+              </t-tag>
+            </view>
+          </view>
+
+          <view class="fee-row" wx:if="{{item.hasFee}}">
+            <view class="fee-value">用户出价 ¥{{item.feeAmountText}}</view>
+            <view class="fee-status">{{item.payStatusText}}</view>
+          </view>
+
+          <view class="item-footer">
+            <view class="user-info">
+              <t-icon name="user" size="24rpx" color="#999999" />
+              <text>{{item.userName || '匿名用户'}}</text>
+            </view>
+            <text class="time-text">{{item.timeText}}</text>
+          </view>
+        </view>
+
+        <view class="load-more" wx:if="{{hasMore}}">
+          <t-loading theme="circular" size="32rpx" text="加载更多..." wx:if="{{loadingMore}}" />
+          <text wx:else bindtap="loadMore">点击加载更多</text>
+        </view>
+
+        <view class="no-more" wx:if="{{!hasMore && consultations.length > 0}}">
+          <text>没有更多咨询了</text>
+        </view>
+      </view>
+
+      <view class="empty-wrapper" wx:elif="{{!loading}}">
+        <t-empty icon="chat" description="暂无咨询记录" />
+      </view>
+
+      <view class="bottom-spacing"></view>
+    </scroll-view>
+  </view>
+
+  <lawyer-tabbar activeTab="consultationList" unreadCount="{{unreadCount}}" />
+</view>

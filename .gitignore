@@ -1,0 +1,12 @@
+law-consult-server/law-consult-server/.m2repo/
+law-consult-server/law-consult-server/uploads/
+law-consult-server/law-consult-server/target/
+law-consult-server/.idea/
+law-consult-server/law-consult-server/.idea/
+law-consult-server/**/*.iml
+law-consult-admin/law-consult-admin/node_modules/
+law-consult-admin/law-consult-admin/dist/
+law-consult-miniprogram/node_modules/
+law-consult-miniprogram/miniprogram_npm/
+law-consult-miniprogram/project.private.config.json
+__to_review_delete__/

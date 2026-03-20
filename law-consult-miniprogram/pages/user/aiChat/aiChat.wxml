@@ -1,0 +1,176 @@
+<!-- AI法律助手页面 -->
+<view class="ai-chat-container">
+  <!-- 导航栏(含状态栏) -->
+  <view class="navbar-wrapper" style="height: {{statusBarHeight + navBarHeight}}px;">
+    <!-- 状态栏占位 -->
+    <view class="status-bar" style="height: {{statusBarHeight}}px;"></view>
+    <!-- 导航栏内容 -->
+    <view class="custom-navbar" style="height: {{navBarHeight}}px;">
+      <view class="navbar-left">
+        <view class="navbar-btn" bindtap="handleBack">
+          <t-icon name="chevron-left" size="48rpx" color="#333" />
+        </view>
+        <view class="navbar-btn" bindtap="toggleDrawer">
+          <t-icon name="view-list" size="40rpx" color="#333" />
+        </view>
+      </view>
+      <view class="navbar-title">AI法律助手</view>
+      <view class="navbar-right">
+        <view class="navbar-btn" bindtap="createNewChat">
+          <t-icon name="add" size="44rpx" color="#333" />
+        </view>
+      </view>
+    </view>
+  </view>
+
+  <!-- 聊天区域 -->
+  <scroll-view
+    class="chat-area"
+    scroll-y
+    enhanced
+    show-scrollbar="{{false}}"
+    scroll-into-view="{{scrollToView}}"
+    scroll-with-animation
+    style="top: {{statusBarHeight + navBarHeight}}px; bottom: {{inputAreaHeight + bottomSafeHeight}}px;"
+  >
+    <!-- 欢迎消息 -->
+    <view class="welcome-section" wx:if="{{messages.length === 0 && !loading}}">
+      <view class="ai-avatar-large">
+        <t-icon name="service" size="80rpx" color="#007AFF" />
+      </view>
+      <view class="welcome-title">AI法律助手</view>
+      <view class="welcome-desc">您好！我是AI法律助手，可以为您解答常见的法律问题。请注意，我的回答仅供参考，复杂问题建议咨询专业律师。</view>
+
+      <view class="quick-questions">
+        <view class="quick-title">常见问题</view>
+        <view class="quick-list">
+          <view
+            class="quick-item"
+            wx:for="{{quickQuestions}}"
+            wx:key="index"
+            bindtap="sendQuickQuestion"
+            data-question="{{item}}"
+          >
+            {{item}}
+          </view>
+        </view>
+      </view>
+    </view>
+
+    <!-- 加载中 -->
+    <view class="loading-section" wx:if="{{loading}}">
+      <t-loading theme="circular" size="40rpx" text="加载中..." />
+    </view>
+
+    <!-- 消息列表 -->
+    <view class="message-list" wx:if="{{messages.length > 0}}">
+      <view
+        class="message-item {{item.role === 'user' ? 'user-message' : 'ai-message'}}"
+        wx:for="{{messages}}"
+        wx:key="id"
+        id="msg-{{item.id}}"
+      >
+        <view class="message-avatar">
+          <t-icon
+            name="{{item.role === 'user' ? 'user-circle' : 'service'}}"
+            size="40rpx"
+            color="{{item.role === 'user' ? '#666666' : '#007AFF'}}"
+          />
+        </view>
+        <view class="message-content">
+          <view class="message-bubble">
+            <text>{{item.content}}</text>
+          </view>
+          <view class="message-time">{{item.timeText}}</view>
+        </view>
+      </view>
+
+      <!-- AI正在输入 -->
+      <view class="message-item ai-message" wx:if="{{isTyping}}">
+        <view class="message-avatar">
+          <t-icon name="service" size="40rpx" color="#007AFF" />
+        </view>
+        <view class="message-content">
+          <view class="message-bubble typing">
+            <view class="typing-dots">
+              <view class="dot"></view>
+              <view class="dot"></view>
+              <view class="dot"></view>
+            </view>
+          </view>
+        </view>
+      </view>
+    </view>
+
+    <!-- 底部占位 -->
+    <view class="chat-bottom-spacing" id="chat-bottom"></view>
+  </scroll-view>
+
+  <!-- 输入区域 -->
+  <view class="input-area">
+    <view class="input-wrapper">
+      <input
+        class="message-input"
+        placeholder="请输入您的法律问题..."
+        value="{{inputValue}}"
+        bindinput="handleInput"
+        bindconfirm="sendMessage"
+        confirm-type="send"
+        disabled="{{isTyping}}"
+      />
+    </view>
+    <view class="send-btn {{inputValue ? 'active' : ''}}" bindtap="sendMessage">
+      <t-icon name="send" size="40rpx" color="{{inputValue ? '#FFFFFF' : '#CCCCCC'}}" />
+    </view>
+  </view>
+
+  <!-- 历史记录侧边栏 -->
+  <view class="drawer-mask {{showDrawer ? 'show' : ''}}" bindtap="toggleDrawer"></view>
+  <view class="history-drawer {{showDrawer ? 'show' : ''}}">
+    <view class="drawer-header" style="padding-top: {{statusBarHeight + 24}}px;">
+      <view class="drawer-title">历史会话</view>
+      <view class="drawer-close" bindtap="toggleDrawer">
+        <t-icon name="close" size="40rpx" color="#666" />
+      </view>
+    </view>
+
+    <scroll-view class="drawer-content" scroll-y>
+      <!-- 新建会话按钮 -->
+      <view class="new-chat-btn" bindtap="createNewChat">
+        <t-icon name="add" size="36rpx" color="#007AFF" />
+        <text>新建会话</text>
+      </view>
+
+      <!-- 历史会话列表 -->
+      <view class="history-list" wx:if="{{historyList.length > 0}}">
+        <view
+          class="history-item {{currentSessionId === item.id ? 'active' : ''}}"
+          wx:for="{{historyList}}"
+          wx:key="id"
+          bindtap="selectSession"
+          data-session="{{item}}"
+        >
+          <view class="history-icon">
+            <t-icon name="chat" size="36rpx" color="#999" />
+          </view>
+          <view class="history-info">
+            <view class="history-title">{{item.title}}</view>
+            <view class="history-time">{{item.timeText}}</view>
+          </view>
+          <view class="history-delete" catchtap="deleteSession" data-id="{{item.id}}">
+            <t-icon name="delete" size="32rpx" color="#999" />
+          </view>
+        </view>
+      </view>
+
+      <!-- 无历史记录 -->
+      <view class="empty-history" wx:if="{{historyList.length === 0}}">
+        <t-icon name="chat" size="80rpx" color="#ddd" />
+        <text>暂无历史会话</text>
+      </view>
+    </scroll-view>
+  </view>
+
+  <!-- Toast -->
+  <t-toast id="t-toast" />
+</view>

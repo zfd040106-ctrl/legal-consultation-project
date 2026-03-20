@@ -1,0 +1,179 @@
+<!-- 统一注册页面 -->
+<view class="register-container">
+  <!-- 导航栏 -->
+  <t-navbar
+    t-class="navbar-class"
+    title="创建账号"
+    left-arrow
+    bind:go-back="handleBack"
+  />
+
+  <!-- 角色选择 -->
+  <view class="role-selection">
+    <view class="role-title">选择身份</view>
+    <t-radio-group value="{{form.userRole}}" bindchange="handleRoleChange">
+      <t-radio value="user" label="普通用户" />
+      <t-radio value="lawyer" label="专业律师" />
+    </t-radio-group>
+  </view>
+
+  <!-- 注册表单 -->
+  <view class="form-section">
+    <!-- 手机号 -->
+    <t-input
+      class="form-input"
+      label="手机号"
+      layout="vertical"
+      type="tel"
+      placeholder="请输入11位手机号"
+      value="{{form.phone}}"
+      bind:change="handlePhoneInput"
+      status="{{errors.phone ? 'error' : ''}}"
+      tips="{{errors.phone || ''}}"
+      maxlength="11"
+    />
+
+    <!-- 账号 -->
+    <view class="form-input account-section">
+      <view class="input-label">账号</view>
+      <view class="account-input-wrapper">
+        <view class="account-prefix">{{form.userRole === 'lawyer' ? 'L' : 'U'}}</view>
+        <view class="account-input-inner">
+          <input
+            class="input-field"
+            type="text"
+            placeholder="请输入7-19个字符"
+            value="{{form.accountSuffix}}"
+            bindinput="handleAccountInput"
+            placeholder-class="input-placeholder"
+            maxlength="19"
+          />
+        </view>
+      </view>
+      <view class="hint-text">账号将自动添加前缀</view>
+      <view wx:if="{{errors.account}}" class="error-text">{{errors.account}}</view>
+    </view>
+
+    <!-- 用户名 -->
+    <t-input
+      class="form-input"
+      label="用户名"
+      layout="vertical"
+      placeholder="请输入用户名（2-20个字符）"
+      value="{{form.username}}"
+      bind:change="handleUsernameInput"
+      status="{{errors.username ? 'error' : ''}}"
+      tips="{{errors.username || ''}}"
+      maxlength="20"
+    />
+
+    <!-- 密码 -->
+    <t-input
+      class="form-input"
+      label="密码"
+      layout="vertical"
+      type="password"
+      placeholder="请输入密码（6-20个字符）"
+      value="{{form.password}}"
+      bind:change="handlePasswordInput"
+      status="{{errors.password ? 'error' : ''}}"
+      tips="{{errors.password || ''}}"
+      maxlength="20"
+    />
+
+    <!-- 确认密码 -->
+    <t-input
+      class="form-input"
+      label="确认密码"
+      layout="vertical"
+      type="password"
+      placeholder="请再次输入密码"
+      value="{{form.confirmPassword}}"
+      bind:change="handleConfirmPasswordInput"
+      status="{{errors.confirmPassword ? 'error' : ''}}"
+      tips="{{errors.confirmPassword || ''}}"
+      maxlength="20"
+    />
+
+    <!-- 律师专有字段 -->
+    <view wx:if="{{form.userRole === 'lawyer'}}" class="lawyer-section">
+      <!-- 律师证号 -->
+      <t-input
+        class="form-input"
+        label="律师证号"
+        layout="vertical"
+        placeholder="请输入有效的律师证号"
+        value="{{form.licenseNumber}}"
+        bind:change="handleLicenseInput"
+        status="{{errors.licenseNumber ? 'error' : ''}}"
+        tips="{{errors.licenseNumber || ''}}"
+      />
+
+      <!-- 律所名称 -->
+      <t-input
+        class="form-input"
+        label="律所名称"
+        layout="vertical"
+        placeholder="请输入所属律师事务所名称"
+        value="{{form.firmName}}"
+        bind:change="handleFirmNameInput"
+        status="{{errors.firmName ? 'error' : ''}}"
+        tips="{{errors.firmName || ''}}"
+        maxlength="50"
+      />
+
+      <!-- 专业领域 -->
+      <view class="form-input specialization-group">
+        <view class="input-label">专业领域 <text class="required">*</text></view>
+        <view class="specialization-list">
+          <view
+            wx:for="{{specializations}}"
+            wx:key="*this"
+            class="specialization-tag {{form.specialization === item ? 'active' : ''}}"
+            bindtap="selectSpecialization"
+            data-specialization="{{item}}"
+          >
+            {{item}}
+          </view>
+        </view>
+        <view wx:if="{{errors.specialization}}" class="error-text">{{errors.specialization}}</view>
+      </view>
+
+      <!-- 文件上传 -->
+      <view class="form-input upload-group">
+        <view class="input-label">上传资质文件 <text class="required">*</text></view>
+        <view class="upload-area" bindtap="handleUploadFile">
+          <view wx:if="{{!form.documents || form.documents.length === 0}}" class="upload-placeholder">
+            <view class="upload-icon">📄</view>
+            <view class="upload-text">点击上传律师证、身份证等资质文件</view>
+            <view class="upload-hint">支持 JPG、PNG、PDF 格式</view>
+          </view>
+          <view wx:else class="upload-success">
+            <view class="success-icon">✓</view>
+            <view class="success-text">已上传 {{form.documents.length}} 个文件</view>
+          </view>
+        </view>
+        <view wx:if="{{errors.documents}}" class="error-text">{{errors.documents}}</view>
+      </view>
+    </view>
+
+    <!-- 注册按钮 -->
+    <t-button
+      class="register-btn"
+      theme="primary"
+      block
+      loading="{{loading}}"
+      disabled="{{loading}}"
+      bindtap="handleRegister"
+    >
+      {{loading ? '注册中...' : '创建账号'}}
+    </t-button>
+
+    <!-- 底部链接 -->
+    <view class="register-footer">
+      <view class="footer-link" bindtap="navigateToLogin">
+        已有账号？点击登录
+      </view>
+    </view>
+  </view>
+</view>

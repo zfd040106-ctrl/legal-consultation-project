@@ -1,0 +1,165 @@
+<view class="profile-container">
+  <t-navbar
+    t-class="navbar-class"
+    title="我的"
+  />
+
+  <scroll-view class="main-content" scroll-y>
+    <view class="lawyer-header" bindtap="goToEditProfile">
+      <view class="lawyer-info">
+        <t-avatar
+          image="{{lawyerInfo.avatar || ''}}"
+          icon="{{!lawyerInfo.avatar ? 'user' : ''}}"
+          size="120rpx"
+        />
+        <view class="lawyer-detail">
+          <view class="lawyer-name">
+            {{lawyerInfo.username || '律师'}}
+            <t-tag
+              wx:if="{{lawyerInfo.status === 'active'}}"
+              theme="success"
+              size="small"
+            >
+              已认证
+            </t-tag>
+            <t-tag
+              wx:elif="{{lawyerInfo.status === 'pending_approval'}}"
+              theme="warning"
+              size="small"
+            >
+              待审核
+            </t-tag>
+          </view>
+          <view class="lawyer-firm">{{lawyerInfo.firmName || '律师事务所'}}</view>
+        </view>
+      </view>
+    </view>
+
+    <view class="menu-section">
+      <t-cell-group>
+        <t-cell
+          title="律师证号"
+          note="{{lawyerInfo.licenseNumber || '未设置'}}"
+        />
+        <t-cell
+          title="专业领域"
+          note="{{lawyerInfo.specialization || '未设置'}}"
+        />
+        <t-cell
+          title="执业年限"
+          note="{{lawyerInfo.experienceYears ? lawyerInfo.experienceYears + '年' : '未设置'}}"
+        />
+      </t-cell-group>
+    </view>
+
+    <view class="menu-section">
+      <t-cell-group>
+        <t-cell
+          title="咨询管理"
+          hover
+          arrow
+          leftIcon="chat"
+          bindtap="goToConsultationList"
+        />
+        <t-cell
+          title="数据统计"
+          hover
+          arrow
+          leftIcon="chart-bar"
+          bindtap="goToStatistics"
+        />
+        <t-cell
+          title="钱包中心"
+          hover
+          arrow
+          leftIcon="wallet"
+          bindtap="goToWallet"
+        />
+        <t-cell
+          title="消息通知"
+          hover
+          arrow
+          leftIcon="notification"
+          note="{{unreadCount > 0 ? unreadCount + '条未读' : ''}}"
+          bindtap="goToMessage"
+        />
+      </t-cell-group>
+    </view>
+
+    <view class="menu-section">
+      <t-cell-group>
+        <t-cell
+          title="账号安全"
+          hover
+          arrow
+          leftIcon="secured"
+          bindtap="goToSecurity"
+        />
+        <t-cell
+          title="关于我们"
+          hover
+          arrow
+          leftIcon="info-circle"
+          bindtap="goToAbout"
+        />
+      </t-cell-group>
+    </view>
+
+    <view class="logout-section">
+      <t-button
+        theme="danger"
+        variant="outline"
+        block
+        bindtap="handleLogout"
+      >
+        退出登录
+      </t-button>
+    </view>
+
+    <view class="bottom-spacing"></view>
+  </scroll-view>
+
+  <lawyer-tabbar activeTab="profile" unreadCount="{{unreadCount}}" bind:tabchange="handleTabChange" />
+
+  <t-dialog
+    visible="{{showLogoutDialog}}"
+    title="确认退出"
+    content="确定要退出登录吗？"
+    confirm-btn="确定"
+    cancel-btn="取消"
+    bind:confirm="confirmLogout"
+    bind:cancel="cancelLogout"
+  />
+
+  <t-popup
+    visible="{{showAboutDialog}}"
+    placement="center"
+    bind:visible-change="closeAboutDialog"
+  >
+    <view class="about-dialog" style="width: 90vw; max-width: 700rpx;">
+      <view class="about-header">关于我们</view>
+      <view class="about-content">
+        <view class="app-name">法律咨询平台</view>
+        <view class="app-version">版本 v1.0.0</view>
+        <view class="app-desc">
+          为律师提供专业的在线咨询管理工具，助力法律服务数字化运营
+        </view>
+        <view class="company-info">
+          <view class="info-item">
+            <text class="info-label">公司名称：</text>
+            <text class="info-value">法律咨询服务有限公司</text>
+          </view>
+          <view class="info-item">
+            <text class="info-label">联系方式：</text>
+            <text class="info-value">service@legal.com</text>
+          </view>
+        </view>
+        <view class="about-footer">
+          <t-button theme="primary" size="small" block bindtap="closeAboutDialog">确定</t-button>
+        </view>
+      </view>
+    </view>
+  </t-popup>
+
+  <t-toast id="t-toast" />
+</view>

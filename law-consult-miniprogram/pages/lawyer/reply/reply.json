@@ -1,0 +1,13 @@
+{
+  "navigationBarTitleText": "回复咨询",
+  "navigationBarBackgroundColor": "#FFFFFF",
+  "navigationBarTextStyle": "black",
+  "navigationStyle": "custom",
+  "usingComponents": {
+    "t-navbar": "tdesign-miniprogram/navbar/navbar",
+    "t-textarea": "tdesign-miniprogram/textarea/textarea",
+    "t-checkbox": "tdesign-miniprogram/checkbox/checkbox",
+    "t-button": "tdesign-miniprogram/button/button",
+    "t-toast": "tdesign-miniprogram/toast/toast"
+  }
+}

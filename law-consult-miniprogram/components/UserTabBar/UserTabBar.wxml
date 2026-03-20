@@ -1,0 +1,17 @@
+<view class="user-tabbar">
+  <view class="tabbar-item {{activeTab === 'index' ? 'active' : ''}}" bindtap="handleTabClick" data-tab="index">
+    <t-icon name="home" size="48rpx" />
+    <view class="tabbar-label">首页</view>
+  </view>
+  <view class="tabbar-item {{activeTab === 'message' ? 'active' : ''}}" bindtap="handleTabClick" data-tab="message">
+    <view class="icon-wrapper">
+      <t-icon name="notification" size="48rpx" />
+      <t-badge wx:if="{{unreadCount > 0}}" count="{{unreadCount}}" size="small" />
+    </view>
+    <view class="tabbar-label">消息</view>
+  </view>
+  <view class="tabbar-item {{activeTab === 'profile' ? 'active' : ''}}" bindtap="handleTabClick" data-tab="profile">
+    <t-icon name="user-circle" size="48rpx" />
+    <view class="tabbar-label">个人</view>
+  </view>
+</view>

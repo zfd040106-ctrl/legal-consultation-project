@@ -1,0 +1,18 @@
+{
+  "navigationBarTitleText": "法律咨询",
+  "navigationBarBackgroundColor": "#FFFFFF",
+  "navigationBarTextStyle": "black",
+  "navigationStyle": "custom",
+  "usingComponents": {
+    "t-navbar": "tdesign-miniprogram/navbar/navbar",
+    "t-search": "tdesign-miniprogram/search/search",
+    "t-cell": "tdesign-miniprogram/cell/cell",
+    "t-cell-group": "tdesign-miniprogram/cell-group/cell-group",
+    "t-badge": "tdesign-miniprogram/badge/badge",
+    "t-tag": "tdesign-miniprogram/tag/tag",
+    "t-empty": "tdesign-miniprogram/empty/empty",
+    "t-loading": "tdesign-miniprogram/loading/loading",
+    "t-icon": "tdesign-miniprogram/icon/icon",
+    "user-tabbar": "../../../components/UserTabBar/UserTabBar"
+  }
+}

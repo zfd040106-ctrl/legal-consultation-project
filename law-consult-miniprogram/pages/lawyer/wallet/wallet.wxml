@@ -1,0 +1,60 @@
+<view class="wallet-container">
+  <t-navbar
+    t-class="navbar-class"
+    title="钱包中心"
+    left-arrow
+    bind:go-back="handleBack"
+  />
+
+  <scroll-view class="wallet-content" scroll-y bindscrolltolower="loadMore">
+    <view class="loading-wrapper" wx:if="{{loading}}">
+      <t-loading theme="circular" size="40rpx" text="加载中..." />
+    </view>
+
+    <block wx:else>
+      <view class="summary-card">
+        <view class="card-title">收入与提现</view>
+        <view class="summary-grid">
+          <view class="summary-item">
+            <view class="summary-label">可提现金额</view>
+            <view class="summary-value">¥{{summary.availableBalance}}</view>
+          </view>
+          <view class="summary-item">
+            <view class="summary-label">冻结金额</view>
+            <view class="summary-value">¥{{summary.frozenBalance}}</view>
+          </view>
+          <view class="summary-item">
+            <view class="summary-label">累计收入</view>
+            <view class="summary-value">¥{{summary.totalIncome}}</view>
+          </view>
+          <view class="summary-item">
+            <view class="summary-label">累计提现</view>
+            <view class="summary-value">¥{{summary.totalWithdrawn}}</view>
+          </view>
+        </view>
+        <view class="action-row">
+          <t-button theme="primary" size="small" bindtap="handleWithdraw">申请提现</t-button>
+        </view>
+      </view>
+
+      <view class="flows-card">
+        <view class="card-title">钱包流水</view>
+        <block wx:if="{{flows.length > 0}}">
+          <view class="flow-item" wx:for="{{flows}}" wx:key="id">
+            <view>
+              <view class="flow-title">{{item.bizLabel}}</view>
+              <view class="flow-time">{{item.timeText}}</view>
+            </view>
+            <view class="flow-amount {{item.amountClass}}">{{item.amountText}}</view>
+          </view>
+          <view class="load-more" wx:if="{{loadingMore}}">
+            <t-loading theme="circular" size="32rpx" text="加载更多..." />
+          </view>
+        </block>
+        <view class="empty-wrapper" wx:else>
+          <t-empty icon="wallet" description="暂无钱包流水" />
+        </view>
+      </view>
+    </block>
+  </scroll-view>
+</view>

@@ -1,0 +1,240 @@
+/* 律师首页样式 */
+.lawyer-index-container {
+  min-height: 100vh;
+  background-color: #F5F5F5;
+  display: flex;
+  flex-direction: column;
+}
+
+.navbar-class {
+  --td-navbar-bg-color: #FFFFFF;
+}
+
+.main-content {
+  height: calc(100vh - 88rpx - 150rpx);
+  padding-top: 0;
+  flex: 1;
+}
+
+/* 律师信息卡片 */
+.lawyer-header {
+  background: linear-gradient(135deg, #F8F9FA 0%, #E9ECEF 100%);
+  padding: 40rpx 32rpx;
+  margin: 16rpx 24rpx;
+  border-radius: 16rpx;
+  box-shadow: 0 2rpx 12rpx rgba(0, 0, 0, 0.05);
+}
+
+.lawyer-info {
+  display: flex;
+  align-items: center;
+}
+
+.lawyer-detail {
+  margin-left: 24rpx;
+  flex: 1;
+}
+
+.lawyer-name {
+  display: flex;
+  align-items: center;
+  gap: 12rpx;
+  font-size: 36rpx;
+  font-weight: 600;
+  color: #333333;
+  margin-bottom: 8rpx;
+}
+
+.lawyer-firm {
+  font-size: 26rpx;
+  color: #666666;
+  margin-bottom: 8rpx;
+}
+
+.lawyer-rating {
+  display: flex;
+  align-items: center;
+  gap: 8rpx;
+  font-size: 26rpx;
+  color: #666666;
+}
+
+/* 统计数据卡片 */
+.stats-card {
+  display: flex;
+  align-items: center;
+  justify-content: space-around;
+  background-color: #FFFFFF;
+  margin: 16rpx 24rpx;
+  padding: 32rpx 16rpx;
+  border-radius: 16rpx;
+}
+
+.stat-item {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.stat-value {
+  font-size: 40rpx;
+  font-weight: 600;
+  color: #333333;
+  margin-bottom: 8rpx;
+}
+
+.stat-value.highlight {
+  color: #FF3B30;
+}
+
+.stat-label {
+  font-size: 24rpx;
+  color: #999999;
+}
+
+.stat-divider {
+  width: 1rpx;
+  height: 60rpx;
+  background-color: #EEEEEE;
+}
+
+/* 快捷操作 */
+.quick-actions {
+  display: flex;
+  justify-content: space-around;
+  background-color: #FFFFFF;
+  margin: 16rpx 24rpx;
+  padding: 32rpx 16rpx;
+  border-radius: 16rpx;
+}
+
+.action-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 12rpx;
+}
+
+.action-item text {
+  font-size: 24rpx;
+  color: #666666;
+}
+
+.action-icon {
+  width: 96rpx;
+  height: 96rpx;
+  border-radius: 24rpx;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.action-icon.consultation {
+  background: linear-gradient(135deg, #007AFF 0%, #0051D5 100%);
+}
+
+.action-icon.statistics {
+  background: linear-gradient(135deg, #FF9500 0%, #FF6B00 100%);
+}
+
+.action-icon.profile {
+  background: linear-gradient(135deg, #34C759 0%, #28A745 100%);
+}
+
+.action-icon.message {
+  background: linear-gradient(135deg, #AF52DE 0%, #8E44AD 100%);
+}
+
+/* 区块卡片 */
+.section-card {
+  background-color: #FFFFFF;
+  margin: 16rpx 24rpx;
+  padding: 24rpx;
+  border-radius: 16rpx;
+}
+
+.section-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20rpx;
+}
+
+.section-title {
+  font-size: 30rpx;
+  font-weight: 600;
+  color: #333333;
+}
+
+.section-more {
+  display: flex;
+  align-items: center;
+  font-size: 26rpx;
+  color: #999999;
+}
+
+/* 加载状态 */
+.loading-wrapper {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 40rpx 0;
+}
+
+/* 空状态 */
+.empty-wrapper {
+  padding: 40rpx 0;
+}
+
+/* 咨询列表项 */
+.consultation-item {
+  display: flex;
+  align-items: center;
+  padding: 20rpx 0;
+  border-bottom: 1rpx solid #F5F5F5;
+}
+
+.consultation-item:last-child {
+  border-bottom: none;
+}
+
+.consultation-main {
+  flex: 1;
+  min-width: 0;
+}
+
+.consultation-title {
+  font-size: 28rpx;
+  font-weight: 500;
+  color: #333333;
+  margin-bottom: 8rpx;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.consultation-meta {
+  display: flex;
+  align-items: center;
+  gap: 12rpx;
+  margin-bottom: 8rpx;
+}
+
+.consultation-time {
+  font-size: 24rpx;
+  color: #999999;
+}
+
+.consultation-user {
+  display: flex;
+  align-items: center;
+  gap: 8rpx;
+  font-size: 24rpx;
+  color: #999999;
+}
+
+/* 底部间距 */
+.bottom-spacing {
+  height: 150rpx;
+}

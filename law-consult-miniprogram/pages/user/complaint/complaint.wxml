@@ -1,0 +1,101 @@
+<!-- 投诉建议页面 -->
+<view class="complaint-container">
+  <!-- 导航栏 -->
+  <t-navbar
+    t-class="navbar-class"
+    title="投诉建议"
+    left-arrow
+    bind:go-back="handleBack"
+  />
+
+  <scroll-view class="main-content" scroll-y>
+    <!-- 类型选择 -->
+    <view class="section-card">
+      <view class="section-title">反馈类型</view>
+      <t-radio-group value="{{form.type}}" bindchange="handleTypeChange">
+        <t-radio value="complaint" label="投诉律师" />
+        <t-radio value="suggestion" label="意见建议" />
+        <t-radio value="bug" label="问题反馈" />
+      </t-radio-group>
+    </view>
+
+    <!-- 投诉原因（仅投诉时显示） -->
+    <view class="section-card" wx:if="{{form.type === 'complaint'}}">
+      <view class="section-title">投诉原因 <text class="required">*</text></view>
+      <view class="reason-list">
+        <view
+          class="reason-tag {{form.reason === item ? 'active' : ''}}"
+          wx:for="{{reasons}}"
+          wx:key="*this"
+          bindtap="selectReason"
+          data-reason="{{item}}"
+        >
+          {{item}}
+        </view>
+      </view>
+      <view wx:if="{{errors.reason}}" class="error-text">{{errors.reason}}</view>
+    </view>
+
+    <!-- 关联咨询（从咨询详情页跳转时） -->
+    <view class="section-card" wx:if="{{consultationId}}">
+      <view class="section-title">关联咨询</view>
+      <view class="related-info">
+        <t-icon name="link" size="32rpx" />
+        <text>咨询编号：{{consultationId}}</text>
+      </view>
+    </view>
+
+    <!-- 详细描述 -->
+    <view class="section-card">
+      <view class="section-title">详细描述 <text class="required">*</text></view>
+      <t-textarea
+        class="form-textarea"
+        t-class="textarea-class"
+        placeholder="{{form.type === 'complaint' ? '请详细描述您遇到的问题，包括时间、经过等信息' : '请描述您的建议或遇到的问题'}}"
+        value="{{form.content}}"
+        maxlength="1000"
+        indicator
+        autosize
+        style="--td-textarea-background-color: #F8F8F8; --td-textarea-border-radius: 12rpx;"
+        bind:change="handleContentInput"
+      />
+      <view wx:if="{{errors.content}}" class="error-text">{{errors.content}}</view>
+    </view>
+
+    <!-- 联系方式 -->
+    <view class="section-card">
+      <view class="section-title">联系方式（选填）</view>
+      <t-input
+        class="form-input"
+        placeholder="留下您的手机号，方便我们联系您"
+        value="{{form.contact}}"
+        type="tel"
+        maxlength="11"
+        bind:change="handleContactInput"
+      />
+    </view>
+
+    <!-- 提交按钮 -->
+    <view class="submit-section">
+      <t-button
+        theme="primary"
+        block
+        loading="{{loading}}"
+        disabled="{{loading}}"
+        bindtap="handleSubmit"
+      >
+        {{loading ? '提交中...' : '提交反馈'}}
+      </t-button>
+      <view class="submit-tips">
+        <t-icon name="info-circle" size="24rpx" />
+        <text>我们会认真对待每一条反馈，并尽快处理</text>
+      </view>
+    </view>
+
+    <!-- 底部间距 -->
+    <view class="bottom-spacing"></view>
+  </scroll-view>
+
+  <!-- Toast -->
+  <t-toast id="t-toast" />
+</view>

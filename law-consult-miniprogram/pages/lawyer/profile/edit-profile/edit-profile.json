@@ -1,0 +1,16 @@
+{
+  "navigationBarTitleText": "\u7f16\u8f91\u4e2a\u4eba\u4fe1\u606f",
+  "navigationBarBackgroundColor": "#FFFFFF",
+  "navigationBarTextStyle": "black",
+  "backgroundColor": "#F5F5F5",
+  "usingComponents": {
+    "t-navbar": "tdesign-miniprogram/navbar/navbar",
+    "t-input": "tdesign-miniprogram/input/input",
+    "t-textarea": "tdesign-miniprogram/textarea/textarea",
+    "t-button": "tdesign-miniprogram/button/button",
+    "t-loading": "tdesign-miniprogram/loading/loading",
+    "t-toast": "tdesign-miniprogram/toast/toast",
+    "t-avatar": "tdesign-miniprogram/avatar/avatar",
+    "t-icon": "tdesign-miniprogram/icon/icon"
+  }
+}

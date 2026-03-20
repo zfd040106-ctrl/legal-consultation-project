@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.example.lawconsultserver.mapper.LawyerDocumentMapper">
+
+    <resultMap id="LawyerDocumentResult" type="com.example.lawconsultserver.entity.LawyerDocument">
+        <id column="id" property="id"/>
+        <result column="lawyer_id" property="lawyerId"/>
+        <result column="document_url" property="documentUrl"/>
+        <result column="document_type" property="documentType"/>
+        <result column="upload_at" property="uploadAt"/>
+        <result column="verified_at" property="verifiedAt"/>
+        <result column="verified_by" property="verifiedBy"/>
+        <result column="status" property="status"/>
+    </resultMap>
+
+    <!-- 插入律师文件 -->
+    <insert id="insertDocument" parameterType="com.example.lawconsultserver.entity.LawyerDocument" useGeneratedKeys="true" keyProperty="id">
+        INSERT INTO lawyer_documents (lawyer_id, document_url, document_type, upload_at, status)
+        VALUES (#{lawyerId}, #{documentUrl}, #{documentType}, NOW(), 'pending')
+    </insert>
+
+    <!-- 根据律师ID查询文件 -->
+    <select id="selectByLawyerId" resultMap="LawyerDocumentResult">
+        SELECT * FROM lawyer_documents
+        WHERE lawyer_id = #{lawyerId}
+        ORDER BY upload_at DESC
+    </select>
+
+    <!-- 更新文件状态 -->
+    <update id="updateStatus">
+        UPDATE lawyer_documents
+        SET status = #{status},
+            verified_at = NOW(),
+            verified_by = #{verifiedBy}
+        WHERE id = #{id}
+    </update>
+
+    <delete id="deleteByLawyerId">
+        DELETE FROM lawyer_documents
+        WHERE lawyer_id = #{lawyerId}
+    </delete>
+
+    <update id="resetStatusByLawyerId">
+        UPDATE lawyer_documents
+        SET status = 'pending',
+            verified_at = NULL,
+            verified_by = NULL
+        WHERE lawyer_id = #{lawyerId}
+    </update>
+
+</mapper>

@@ -1,0 +1,48 @@
+<!-- 律师端自定义底部导航栏 -->
+<view class="lawyer-tabbar">
+  <!-- 首页 -->
+  <view
+    class="tabbar-item {{activeTab === 'index' ? 'active' : ''}}"
+    bindtap="handleTabClick"
+    data-tab="index"
+  >
+    <t-icon name="home" size="48rpx" />
+    <view class="tabbar-label">首页</view>
+  </view>
+
+  <!-- 咨询管理 -->
+  <view
+    class="tabbar-item {{activeTab === 'consultationList' ? 'active' : ''}}"
+    bindtap="handleTabClick"
+    data-tab="consultationList"
+  >
+    <t-icon name="chat" size="48rpx" />
+    <view class="tabbar-label">咨询</view>
+  </view>
+
+  <!-- 消息 -->
+  <view
+    class="tabbar-item {{activeTab === 'message' ? 'active' : ''}}"
+    bindtap="handleTabClick"
+    data-tab="message"
+  >
+    <t-icon name="notification" size="48rpx" />
+    <t-badge
+      wx:if="{{unreadCount > 0}}"
+      content="{{unreadCount}}"
+      shape="circle"
+      class="tabbar-badge"
+    />
+    <view class="tabbar-label">消息</view>
+  </view>
+
+  <!-- 个人中心 -->
+  <view
+    class="tabbar-item {{activeTab === 'profile' ? 'active' : ''}}"
+    bindtap="handleTabClick"
+    data-tab="profile"
+  >
+    <t-icon name="user" size="48rpx" />
+    <view class="tabbar-label">个人</view>
+  </view>
+</view>

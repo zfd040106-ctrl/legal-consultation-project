@@ -1,0 +1,389 @@
+.consultation-container {
+  min-height: 100vh;
+  background-color: #F5F5F5;
+  display: flex;
+  flex-direction: column;
+}
+
+.navbar-class {
+  --td-navbar-bg-color: #FFFFFF;
+}
+
+.form-content {
+  height: calc(100vh - 88rpx);
+  padding-top: 0;
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  overflow-y: auto;
+}
+
+.form-section {
+  background-color: #FFFFFF;
+  padding: 24rpx;
+  margin-bottom: 16rpx;
+}
+
+.section-label {
+  font-size: 28rpx;
+  font-weight: 500;
+  color: #333333;
+  margin-bottom: 16rpx;
+}
+
+.required {
+  color: #FF3B30;
+}
+
+.optional {
+  font-size: 24rpx;
+  color: #999999;
+  font-weight: 400;
+}
+
+.error-text {
+  font-size: 24rpx;
+  color: #FF3B30;
+  margin-top: 12rpx;
+}
+
+.selection-entry {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 24rpx;
+  background-color: #F8FAFC;
+  border-radius: 16rpx;
+}
+
+.selection-title {
+  font-size: 28rpx;
+  font-weight: 500;
+  color: #1F2937;
+}
+
+.selection-subtitle {
+  margin-top: 8rpx;
+  font-size: 24rpx;
+  color: #94A3B8;
+}
+
+.lawyer-card {
+  display: flex;
+  justify-content: space-between;
+  gap: 20rpx;
+  align-items: center;
+  padding: 24rpx;
+  border-radius: 16rpx;
+  background-color: #F8FAFC;
+}
+
+.lawyer-info {
+  display: flex;
+  align-items: center;
+  flex: 1;
+}
+
+.lawyer-avatar {
+  width: 88rpx;
+  height: 88rpx;
+  border-radius: 50%;
+  background-color: #DBEAFE;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+  flex-shrink: 0;
+}
+
+.lawyer-avatar-image {
+  width: 100%;
+  height: 100%;
+}
+
+.lawyer-detail {
+  margin-left: 20rpx;
+  min-width: 0;
+}
+
+.lawyer-name {
+  font-size: 30rpx;
+  font-weight: 600;
+  color: #111827;
+}
+
+.lawyer-meta {
+  margin-top: 8rpx;
+  font-size: 24rpx;
+  color: #6B7280;
+  line-height: 1.5;
+}
+
+.lawyer-switch {
+  flex-shrink: 0;
+  font-size: 24rpx;
+  color: #2563EB;
+}
+
+.payment-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 24rpx;
+}
+
+.payment-row + .payment-row {
+  margin-top: 16rpx;
+}
+
+.payment-label {
+  font-size: 26rpx;
+  color: #4B5563;
+}
+
+.payment-input-wrapper {
+  min-width: 260rpx;
+  padding: 0 20rpx;
+  background-color: #F8FAFC;
+  border-radius: 12rpx;
+}
+
+.fee-input /deep/ .t-input {
+  padding: 0;
+}
+
+.wallet-row {
+  align-items: flex-end;
+}
+
+.wallet-balance {
+  font-size: 42rpx;
+  font-weight: 700;
+  color: #111827;
+}
+
+.payment-tips {
+  margin-top: 12rpx;
+  font-size: 24rpx;
+  color: #94A3B8;
+}
+
+.wallet-button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  margin-top: 20rpx;
+  padding: 14rpx 26rpx;
+  border: 2rpx solid #2563EB;
+  border-radius: 14rpx;
+  color: #2563EB;
+  font-size: 26rpx;
+  font-weight: 600;
+}
+
+.category-list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 16rpx;
+}
+
+.category-tag {
+  padding: 12rpx 24rpx;
+  background-color: #F5F5F5;
+  border-radius: 8rpx;
+  font-size: 26rpx;
+  color: #666666;
+  border: 2rpx solid transparent;
+  transition: all 0.2s;
+}
+
+.category-tag.active {
+  background-color: #E6F2FF;
+  color: #007AFF;
+  border-color: #007AFF;
+}
+
+.category-tag:active {
+  opacity: 0.8;
+}
+
+.priority-list {
+  display: flex;
+  gap: 24rpx;
+}
+
+.priority-item {
+  display: flex;
+  align-items: center;
+  padding: 16rpx 24rpx;
+  background-color: #F5F5F5;
+  border-radius: 8rpx;
+  font-size: 26rpx;
+  color: #666666;
+  border: 2rpx solid transparent;
+  flex: 1;
+  justify-content: center;
+}
+
+.priority-item.active {
+  background-color: #FFFFFF;
+  border-color: #007AFF;
+  color: #333333;
+}
+
+.priority-dot {
+  width: 16rpx;
+  height: 16rpx;
+  border-radius: 50%;
+  margin-right: 8rpx;
+}
+
+.priority-dot.low {
+  background-color: #34C759;
+}
+
+.priority-dot.medium {
+  background-color: #FF9500;
+}
+
+.priority-dot.high {
+  background-color: #FF3B30;
+}
+
+.upload-tips {
+  font-size: 24rpx;
+  color: #999999;
+  margin-bottom: 16rpx;
+}
+
+.upload-area {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 16rpx;
+}
+
+.upload-list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 16rpx;
+}
+
+.upload-item {
+  position: relative;
+  width: 160rpx;
+  height: 160rpx;
+  border-radius: 12rpx;
+  overflow: hidden;
+}
+
+.upload-image {
+  width: 100%;
+  height: 100%;
+}
+
+.upload-file {
+  width: 100%;
+  height: 100%;
+  background-color: #F5F5F5;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
+.file-name {
+  font-size: 20rpx;
+  color: #666666;
+  margin-top: 8rpx;
+  max-width: 140rpx;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.upload-remove {
+  position: absolute;
+  top: 8rpx;
+  right: 8rpx;
+  width: 36rpx;
+  height: 36rpx;
+  background-color: rgba(0, 0, 0, 0.5);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.upload-add {
+  width: 160rpx;
+  height: 160rpx;
+  background-color: #F5F5F5;
+  border: 2rpx dashed #CCCCCC;
+  border-radius: 12rpx;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  font-size: 24rpx;
+  color: #999999;
+}
+
+.upload-add text {
+  margin-top: 8rpx;
+}
+
+.submit-section {
+  padding: 32rpx 24rpx;
+  background-color: #FFFFFF;
+  margin-top: 16rpx;
+}
+
+.submit-tips {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-top: 20rpx;
+  font-size: 24rpx;
+  color: #999999;
+}
+
+.submit-tips text {
+  margin-left: 8rpx;
+}
+
+.bottom-spacing {
+  height: 60rpx;
+}
+
+.form-input /deep/ .t-input__label {
+  font-size: 28rpx;
+  font-weight: 500;
+  color: #333333;
+}
+
+.form-input /deep/ .t-input__input {
+  font-size: 26rpx;
+  background-color: #F8F8F8;
+  border-radius: 12rpx;
+  padding: 16rpx;
+}
+
+.textarea-class {
+  min-height: 240rpx !important;
+}
+
+.form-textarea /deep/ .t-textarea__wrapper {
+  min-height: 240rpx !important;
+}
+
+.form-textarea /deep/ .t-textarea__wrapper-inner {
+  min-height: 240rpx !important;
+}
+
+.form-textarea /deep/ .t-textarea__wrapper textarea {
+  min-height: 200rpx !important;
+}
+
+.form-textarea /deep/ textarea {
+  min-height: 200rpx !important;
+}

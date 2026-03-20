@@ -1,0 +1,141 @@
+:root {
+  /* ========== 页面背景层级 ========== */
+
+  /* 内容区域整体背景 - 浅灰冷色"地面层" */
+  --bg-page: #f5f6fa;
+
+  /* 导航栏背景 - 极浅灰 */
+  --bg-nav: #f8f9fc;
+
+  /* ========== 三种卡片类型 ========== */
+
+  /* 类型 A：顶部核心统计卡 - 纯白 + 四周柔和阴影 */
+  --bg-card-stat: #ffffff;
+  --shadow-card-stat:
+    0 4px 16px rgba(0, 0, 0, 0.06),
+    0 1px 4px rgba(0, 0, 0, 0.04);
+  --shadow-card-stat-hover:
+    0 8px 24px rgba(0, 0, 0, 0.08),
+    0 2px 6px rgba(0, 0, 0, 0.05);
+
+  /* 类型 B：内容嵌入型模块（注册统计/公告/咨询统计）
+     - 背景色 = 页面背景
+     - 上方无阴影
+     - 左右阴影从上往下加深
+     - 下方有阴影 */
+  --bg-card-content: var(--bg-page);
+
+  /* 类型 C：右侧浮层卡片（最近操作）
+     - 背景略凉，不是纯白
+     - 四周有阴影（整个页面最深） */
+  --bg-card-float: #f7f8fc;
+  --shadow-card-float:
+    0 10px 40px rgba(0, 0, 0, 0.16),
+    0 6px 16px rgba(0, 0, 0, 0.12);
+
+  /* 导航栏阴影 */
+  --shadow-header: 0 1px 3px rgba(0, 0, 0, 0.04);
+  --shadow-sidebar: none;
+
+  /* ========== 圆角系统 ========== */
+  --radius-card: 16px;
+  --radius-xs: 4px;
+  --radius-sm: 6px;
+  --radius-md: 8px;
+  --radius-lg: 12px;
+  --radius-xl: 16px;
+  --radius-2xl: 20px;
+  --radius-full: 9999px;
+
+  /* ========== 主色调 ========== */
+  --primary-color: #1a1a1a;
+  --primary-light: #333333;
+  --primary-lighter: #f0f0f0;
+  --primary-dark: #000000;
+
+  /* ========== 语义色 ========== */
+  --success-color: #22c55e;
+  --success-light: #dcfce7;
+  --warning-color: #f59e0b;
+  --warning-light: #fef3c7;
+  --danger-color: #ef4444;
+  --danger-light: #fee2e2;
+  --info-color: #6b7280;
+  --info-light: #f3f4f6;
+
+  /* ========== 中性色阶 ========== */
+  --gray-50: #f9fafb;
+  --gray-100: #f3f4f6;
+  --gray-200: #e5e7eb;
+  --gray-300: #d1d5db;
+  --gray-400: #9ca3af;
+  --gray-500: #6b7280;
+  --gray-600: #4b5563;
+  --gray-700: #374151;
+  --gray-800: #1f2937;
+  --gray-900: #111827;
+
+  /* ========== 文本颜色 ========== */
+  --text-primary: #111827;
+  --text-secondary: #4b5563;
+  --text-tertiary: #6b7280;
+  --text-placeholder: #9ca3af;
+  --text-disabled: #d1d5db;
+
+  /* ========== 边框颜色 ========== */
+  --border-color: #e5e7eb;
+  --border-light: #eef0f5;
+
+  /* ========== 间距系统 ========== */
+  --spacing-1: 4px;
+  --spacing-2: 8px;
+  --spacing-3: 12px;
+  --spacing-4: 16px;
+  --spacing-5: 20px;
+  --spacing-6: 24px;
+  --spacing-8: 32px;
+  --spacing-10: 40px;
+  --spacing-12: 48px;
+
+  /* ========== 字体系统 ========== */
+  --font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Display', 'Segoe UI', Roboto,
+    'Helvetica Neue', Arial, 'PingFang SC', 'Microsoft YaHei', sans-serif;
+
+  --text-xs: 12px;
+  --text-sm: 13px;
+  --text-base: 14px;
+  --text-md: 15px;
+  --text-lg: 16px;
+  --text-xl: 18px;
+  --text-2xl: 20px;
+  --text-3xl: 24px;
+  --text-4xl: 32px;
+
+  --font-normal: 400;
+  --font-medium: 500;
+  --font-semibold: 600;
+  --font-bold: 700;
+
+  --leading-tight: 1.25;
+  --leading-normal: 1.5;
+  --leading-relaxed: 1.625;
+
+  /* ========== 过渡动画 ========== */
+  --duration-fast: 150ms;
+  --duration-normal: 200ms;
+  --duration-slow: 300ms;
+  --ease-out: cubic-bezier(0.33, 1, 0.68, 1);
+  --ease-in-out: cubic-bezier(0.65, 0, 0.35, 1);
+
+  /* ========== 布局尺寸 ========== */
+  --sidebar-width: 200px;
+  --header-height: 72px;
+  --content-max-width: 1440px;
+
+  /* ========== 兼容性变量 ========== */
+  --bg-card: var(--bg-card-stat);
+  --shadow-card: var(--shadow-card-stat);
+  --shadow-card-hover: var(--shadow-card-stat-hover);
+  --bg-hover: #eef0f5;
+  --bg-active: #e8eaf0;
+}

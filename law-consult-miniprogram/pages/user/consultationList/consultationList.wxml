@@ -1,0 +1,132 @@
+<view class="consultation-list-container">
+  <t-navbar
+    t-class="navbar-class"
+    title="我的咨询"
+    left-arrow
+    bind:go-back="handleBack"
+  />
+
+  <view class="search-section">
+    <t-search
+      placeholder="搜索咨询内容"
+      shape="round"
+      value="{{keyword}}"
+      bind:change="handleSearchChange"
+      bind:submit="handleSearch"
+      bind:clear="handleClear"
+    />
+  </view>
+
+  <view class="tabs-section">
+    <t-tabs
+      value="{{activeTab}}"
+      bind:change="handleTabChange"
+      t-class="custom-tabs"
+    >
+      <t-tab-panel label="全部" value="all" />
+      <t-tab-panel label="待处理" value="open" />
+      <t-tab-panel label="待律师接受" value="pending_accept" />
+      <t-tab-panel label="处理中" value="in_progress" />
+      <t-tab-panel label="已解决" value="resolved" />
+    </t-tabs>
+  </view>
+
+  <scroll-view
+    class="list-content"
+    scroll-y
+    enhanced
+    show-scrollbar="{{false}}"
+    bindscrolltolower="loadMore"
+  >
+    <view class="loading-wrapper" wx:if="{{loading && consultations.length === 0}}">
+      <t-loading theme="circular" size="40rpx" text="加载中..." />
+    </view>
+
+    <view class="consultation-list" wx:elif="{{consultations.length > 0}}">
+      <view
+        class="consultation-item"
+        wx:for="{{consultations}}"
+        wx:key="id"
+        bindtap="goToDetail"
+        data-id="{{item.id}}"
+      >
+        <view class="item-header">
+          <view class="item-tags">
+            <t-tag size="small" variant="light" theme="primary">{{item.category}}</t-tag>
+            <t-tag
+              size="small"
+              variant="light"
+              wx:if="{{item.priority === 'high'}}"
+              theme="danger"
+            >
+              紧急
+            </t-tag>
+          </view>
+          <view class="item-header-right">
+            <view class="item-status">
+              <t-tag size="small" variant="light" theme="{{statusTheme[item.status]}}">
+                {{statusText[item.status]}}
+              </t-tag>
+            </view>
+            <view
+              class="item-delete"
+              wx:if="{{item.status === 'open' || item.status === 'pending_accept' || item.status === 'resolved' || item.status === 'closed'}}"
+              catchtap="handleDelete"
+              data-id="{{item.id}}"
+            >
+              <t-icon name="delete" size="32rpx" color="#FF3B30" />
+            </view>
+          </view>
+        </view>
+
+        <view class="item-title">{{item.title}}</view>
+        <view class="item-content">{{item.content}}</view>
+
+        <view class="item-footer">
+          <view class="item-time">
+            <t-icon name="time" size="24rpx" />
+            <text>{{item.createTimeText}}</text>
+          </view>
+          <view class="item-reply" wx:if="{{item.replyCount > 0}}">
+            <t-icon name="chat" size="24rpx" />
+            <text>{{item.replyCount}}条回复</text>
+          </view>
+        </view>
+
+        <view class="item-lawyer" wx:if="{{item.lawyerName}}">
+          <view class="lawyer-avatar">
+            <t-icon name="user" size="28rpx" color="#007AFF" />
+          </view>
+          <text class="lawyer-name">{{item.lawyerName}}</text>
+          <text class="lawyer-label">负责律师</text>
+        </view>
+      </view>
+
+      <view class="load-more" wx:if="{{hasMore}}">
+        <t-loading wx:if="{{loadingMore}}" theme="circular" size="32rpx" />
+        <text wx:else class="load-more-text">上拉加载更多</text>
+      </view>
+
+      <view class="no-more" wx:if="{{!hasMore && consultations.length > 0}}">
+        <text>- 没有更多了 -</text>
+      </view>
+    </view>
+
+    <view class="empty-wrapper" wx:else>
+      <t-empty
+        icon="file"
+        description="{{keyword ? '未找到相关咨询' : '暂无咨询记录'}}"
+      >
+        <view slot="action" class="empty-action" bindtap="goToConsultation" wx:if="{{!keyword}}">
+          发起咨询
+        </view>
+      </t-empty>
+    </view>
+
+    <view class="bottom-spacing"></view>
+  </scroll-view>
+
+  <view class="fab-button" bindtap="goToConsultation">
+    <t-icon name="add" size="48rpx" color="#FFFFFF" />
+  </view>
+</view>

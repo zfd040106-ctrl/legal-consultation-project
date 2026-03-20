@@ -1,0 +1,88 @@
+<view class="reader-page">
+  <t-navbar
+    t-class="navbar-class"
+    title="专题详情"
+    left-arrow
+    bind:go-back="handleBack"
+  />
+
+  <view class="loading-wrapper" wx:if="{{loading}}">
+    <t-loading theme="circular" size="40rpx" text="加载中..." />
+  </view>
+
+  <scroll-view class="reader-scroll" scroll-y wx:elif="{{detail}}">
+    <view class="reader-body">
+      <view class="hero-card" bindtap="previewCover">
+        <image class="hero-image" src="{{detail.displayImageUrl}}" mode="aspectFill" />
+        <view class="hero-overlay"></view>
+        <view class="hero-meta">
+          <t-tag size="small" variant="light" theme="primary">{{detail.categoryText}}</t-tag>
+          <view class="hero-title">{{detail.title}}</view>
+          <view class="hero-time" wx:if="{{detail.timeText}}">
+            <t-icon name="time" size="24rpx" color="rgba(255, 255, 255, 0.82)" />
+            <text>{{detail.timeText}}</text>
+          </view>
+        </view>
+      </view>
+
+      <view class="article-card" wx:if="{{detail.summaryText}}">
+        <view class="article-label">专题导读</view>
+        <view class="article-summary">{{detail.summaryText}}</view>
+      </view>
+
+      <view class="article-card article-content-card">
+        <view class="reader-card-header">
+          <view>
+            <view class="article-label">正文内容</view>
+            <view class="reader-hint">左右滑动翻页，阅读更轻松</view>
+          </view>
+          <view class="reader-page-count">
+            {{currentReaderPage + 1}} / {{detail.readerPages.length}}
+          </view>
+        </view>
+
+        <swiper
+          class="reader-swiper"
+          circular="{{false}}"
+          current="{{currentReaderPage}}"
+          bindchange="handleReaderPageChange"
+        >
+          <swiper-item
+            wx:for="{{detail.readerPages}}"
+            wx:key="pageNumber"
+          >
+            <view class="reader-sheet">
+              <view
+                class="article-paragraph"
+                wx:for="{{item.paragraphs}}"
+                wx:key="index"
+              >
+                {{item}}
+              </view>
+              <view class="reader-sheet-footer">第 {{item.pageNumber}} 页</view>
+            </view>
+          </swiper-item>
+        </swiper>
+
+        <view class="reader-actions" wx:if="{{detail.readerPages.length > 1}}">
+          <view
+            class="reader-action reader-action-prev {{currentReaderPage === 0 ? 'is-disabled' : ''}}"
+            bindtap="goToPrevReaderPage"
+          >
+            上一页
+          </view>
+          <view
+            class="reader-action reader-action-next {{currentReaderPage + 1 === detail.readerPages.length ? 'is-disabled' : ''}}"
+            bindtap="goToNextReaderPage"
+          >
+            下一页
+          </view>
+        </view>
+      </view>
+    </view>
+  </scroll-view>
+
+  <view class="empty-wrapper" wx:else>
+    <t-empty description="暂无专题内容" />
+  </view>
+</view>

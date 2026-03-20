@@ -1,0 +1,150 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.example.lawconsultserver.mapper.UserMapper">
+
+    <resultMap id="UserResult" type="com.example.lawconsultserver.entity.User">
+        <id column="id" property="id"/>
+        <result column="account" property="account"/>
+        <result column="password" property="password"/>
+        <result column="phone" property="phone"/>
+        <result column="username" property="username"/>
+        <result column="role" property="role"/>
+        <result column="status" property="status"/>
+        <result column="created_at" property="createdAt"/>
+        <result column="avatar" property="avatar"/>
+    </resultMap>
+
+    <!-- 新增用户 -->
+    <insert id="insertUser" parameterType="User" useGeneratedKeys="true" keyProperty="id">
+        INSERT INTO users (account, password, phone, username, role, status, created_at)
+        VALUES (#{account}, #{password}, #{phone}, #{username}, #{role}, #{status}, NOW())
+    </insert>
+
+    <!-- 根据ID查询用户 -->
+    <select id="selectUserById" parameterType="int" resultMap="UserResult">
+        SELECT * FROM users WHERE id = #{id}
+    </select>
+
+    <!-- 根据账号查询用户 -->
+    <select id="selectUserByAccount" parameterType="string" resultMap="UserResult">
+        SELECT * FROM users WHERE account = #{account}
+    </select>
+
+    <!-- 根据手机号查询用户 -->
+    <select id="selectUserByPhone" parameterType="string" resultMap="UserResult">
+        SELECT * FROM users WHERE phone = #{phone}
+    </select>
+
+    <!-- 查询用户列表（分页）-->
+    <select id="selectUsers" resultMap="UserResult">
+        SELECT * FROM users
+        <where>
+            <if test="role != null and role != ''">
+                AND role = #{role}
+            </if>
+            <if test="status != null and status != ''">
+                AND status = #{status}
+            </if>
+        </where>
+        ORDER BY created_at DESC
+        LIMIT #{offset}, #{limit}
+    </select>
+
+    <!-- 统计用户总数 -->
+    <select id="countUsers" resultType="long">
+        SELECT COUNT(*) FROM users
+        <where>
+            <if test="role != null and role != ''">
+                AND role = #{role}
+            </if>
+            <if test="status != null and status != ''">
+                AND status = #{status}
+            </if>
+        </where>
+    </select>
+
+    <!-- 更新用户 -->
+    <update id="updateUser" parameterType="User">
+        UPDATE users
+        <set>
+            <if test="password != null">password = #{password},</if>
+            <if test="phone != null">phone = #{phone},</if>
+            <if test="username != null">username = #{username},</if>
+            <if test="avatar != null">avatar = #{avatar},</if>
+        </set>
+        WHERE id = #{id}
+    </update>
+
+    <!-- 更新用户状态 -->
+    <update id="updateUserStatus">
+        UPDATE users SET status = #{status}
+        WHERE id = #{id}
+    </update>
+
+    <!-- 删除用户 -->
+    <delete id="deleteUser" parameterType="int">
+        DELETE FROM users WHERE id = #{id}
+    </delete>
+
+    <!-- 查询所有用户（排除待审核律师和管理员）- 用户管理页面使用 -->
+    <select id="selectUsersExcludePending" resultMap="UserResult">
+        SELECT * FROM users
+        <where>
+            AND status != 'pending_approval'
+            AND role != 'admin'
+            <if test="role != null and role != ''">
+                AND role = #{role}
+            </if>
+            <if test="status != null and status != ''">
+                AND status = #{status}
+            </if>
+            <if test="keyword != null and keyword != ''">
+                AND (account LIKE CONCAT('%', #{keyword}, '%')
+                     OR username LIKE CONCAT('%', #{keyword}, '%')
+                     OR phone LIKE CONCAT('%', #{keyword}, '%'))
+            </if>
+        </where>
+        ORDER BY created_at DESC
+        LIMIT #{offset}, #{limit}
+    </select>
+
+    <!-- 统计用户总数（排除待审核律师和管理员）- 用户管理页面使用 -->
+    <select id="countUsersExcludePending" resultType="long">
+        SELECT COUNT(*) FROM users
+        <where>
+            AND status != 'pending_approval'
+            AND role != 'admin'
+            <if test="role != null and role != ''">
+                AND role = #{role}
+            </if>
+            <if test="status != null and status != ''">
+                AND status = #{status}
+            </if>
+            <if test="keyword != null and keyword != ''">
+                AND (account LIKE CONCAT('%', #{keyword}, '%')
+                     OR username LIKE CONCAT('%', #{keyword}, '%')
+                     OR phone LIKE CONCAT('%', #{keyword}, '%'))
+            </if>
+        </where>
+    </select>
+
+    <!-- 获取用户增长数据（只统计已审核通过的用户，排除待审核状态） -->
+    <select id="getUserGrowthData" resultType="map">
+        SELECT DATE(created_at) as day, COUNT(*) as count
+        FROM users
+        WHERE role = 'user' AND status = 'active'
+        GROUP BY DATE(created_at)
+        ORDER BY day
+    </select>
+
+    <!-- 获取律师增长数据（只统计已审核通过的律师，排除待审核状态） -->
+    <select id="getLawyerGrowthData" resultType="map">
+        SELECT DATE(created_at) as day, COUNT(*) as count
+        FROM users
+        WHERE role = 'lawyer' AND status = 'active'
+        GROUP BY DATE(created_at)
+        ORDER BY day
+    </select>
+
+</mapper>

@@ -1,0 +1,13 @@
+{
+  "navigationBarTitleText": "钱包中心",
+  "navigationBarBackgroundColor": "#FFFFFF",
+  "navigationBarTextStyle": "black",
+  "navigationStyle": "custom",
+  "usingComponents": {
+    "t-navbar": "tdesign-miniprogram/navbar/navbar",
+    "t-button": "tdesign-miniprogram/button/button",
+    "t-empty": "tdesign-miniprogram/empty/empty",
+    "t-loading": "tdesign-miniprogram/loading/loading",
+    "t-icon": "tdesign-miniprogram/icon/icon"
+  }
+}

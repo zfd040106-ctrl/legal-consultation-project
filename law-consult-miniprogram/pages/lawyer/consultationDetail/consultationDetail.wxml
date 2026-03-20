@@ -1,0 +1,187 @@
+<view class="detail-container">
+  <t-navbar
+    t-class="navbar-class"
+    title="咨询详情"
+    left-arrow
+    bind:go-back="handleBack"
+  />
+
+  <view class="loading-wrapper" wx:if="{{loading}}">
+    <t-loading theme="circular" size="40rpx" text="加载中..." />
+  </view>
+
+  <scroll-view class="main-content" scroll-y wx:else>
+    <view class="status-bar {{consultation.status}}">
+      <t-icon name="{{statusIcon}}" size="40rpx" />
+      <text>{{statusText}}</text>
+    </view>
+
+    <view class="section-card user-card">
+      <view class="section-title">用户信息</view>
+      <view class="user-info">
+        <t-avatar
+          image="{{consultation.userAvatar || ''}}"
+          icon="{{!consultation.userAvatar ? 'user' : ''}}"
+          size="80rpx"
+        />
+        <view class="user-detail">
+          <view class="user-name">{{consultation.userName || '匿名用户'}}</view>
+          <view class="user-phone" wx:if="{{consultation.userPhone}}">
+            <t-icon name="call" size="24rpx" />
+            <text>{{consultation.userPhone}}</text>
+          </view>
+        </view>
+      </view>
+    </view>
+
+    <view class="section-card">
+      <view class="section-header">
+        <view class="section-title">咨询内容</view>
+        <view class="meta-tags">
+          <t-tag theme="primary" size="small" variant="light">{{consultation.category || '其他'}}</t-tag>
+          <t-tag theme="warning" size="small" variant="light">{{consultation.assignmentTypeText}}</t-tag>
+          <t-tag
+            wx:if="{{consultation.priority === 'high'}}"
+            theme="danger"
+            size="small"
+            variant="light"
+          >
+            紧急
+          </t-tag>
+        </view>
+      </view>
+      <view class="consultation-title">{{consultation.title}}</view>
+      <view class="consultation-content">{{consultation.description}}</view>
+
+      <view class="fee-card" wx:if="{{consultation.hasFee}}">
+        <view class="fee-label">用户出价</view>
+        <view class="fee-value">¥{{consultation.feeAmountText}}</view>
+      </view>
+      <view class="info-line" wx:if="{{consultation.hasFee}}">
+        <text>支付状态</text>
+        <text>{{consultation.payStatusText}}</text>
+      </view>
+
+      <view class="consultation-time">
+        <t-icon name="time" size="24rpx" color="#999999" />
+        <text>{{consultation.createdAtText}}</text>
+      </view>
+
+      <view class="card-attachments" wx:if="{{attachments && attachments.length > 0}}">
+        <view class="attachments-title">
+          <t-icon name="attachment" size="28rpx" />
+          <text>附件 ({{attachments.length}})</text>
+        </view>
+        <view class="attachments-list">
+          <view
+            class="attachment-item"
+            wx:for="{{attachments}}"
+            wx:key="url"
+            bindtap="previewAttachment"
+            data-url="{{item.url}}"
+            data-is-image="{{item.isImage}}"
+          >
+            <t-image
+              wx:if="{{item.isImage}}"
+              src="{{item.url}}"
+              mode="aspectFill"
+              class="attachment-image"
+            />
+            <view wx:else class="attachment-file">
+              <t-icon name="file" size="40rpx" />
+            </view>
+          </view>
+        </view>
+      </view>
+    </view>
+
+    <view class="section-card">
+      <view class="section-title">回复记录</view>
+
+      <view wx:if="{{replies.length > 0}}">
+        <view
+          class="reply-item {{item.isLawyer ? 'lawyer-reply' : 'user-reply'}}"
+          wx:for="{{replies}}"
+          wx:key="id"
+        >
+          <view class="reply-header">
+            <view class="reply-author">
+              <t-avatar
+                image="{{item.isLawyer ? '' : consultation.userAvatar}}"
+                icon="user"
+                size="64rpx"
+              />
+              <view class="author-info">
+                <text class="author-name">{{item.isLawyer ? '律师' : (consultation.userName || '用户')}}</text>
+                <text class="reply-time">{{item.timeText}}</text>
+              </view>
+            </view>
+            <t-tag
+              wx:if="{{item.isSolution}}"
+              theme="success"
+              size="small"
+              variant="light"
+            >
+              解决方案
+            </t-tag>
+          </view>
+          <view class="reply-content">{{item.content}}</view>
+        </view>
+      </view>
+
+      <view class="empty-replies" wx:else>
+        <t-empty icon="chat" description="暂无回复" />
+      </view>
+    </view>
+
+    <view class="bottom-spacing"></view>
+  </scroll-view>
+
+  <view class="action-bar" wx:if="{{!loading && consultation.status !== 'closed'}}">
+    <t-button
+      wx:if="{{canReject}}"
+      theme="default"
+      variant="outline"
+      block
+      bindtap="handleReject"
+    >
+      拒绝定向咨询
+    </t-button>
+    <t-button
+      wx:if="{{canAccept}}"
+      theme="primary"
+      block
+      bindtap="handleAccept"
+    >
+      接受咨询
+    </t-button>
+    <t-button
+      wx:elif="{{canChat}}"
+      theme="primary"
+      block
+      bindtap="goToReply"
+    >
+      进入聊天
+    </t-button>
+    <t-button
+      wx:elif="{{consultation.status === 'resolved'}}"
+      theme="default"
+      variant="outline"
+      block
+      disabled
+    >
+      咨询已解决
+    </t-button>
+    <t-button
+      wx:else
+      theme="default"
+      variant="outline"
+      block
+      disabled
+    >
+      当前不可处理
+    </t-button>
+  </view>
+
+  <t-toast id="t-toast" />
+</view>

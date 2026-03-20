@@ -1,0 +1,19 @@
+<!-- 启动页 -->
+<view class="splash-container">
+  <!-- 背景图片 -->
+  <image class="splash-background" src="/assets/images/splash-bg.png" mode="aspectFill"></image>
+  <!-- 内容区域 -->
+  <view class="splash-content">
+    <!-- Logo 和标题 -->
+    <view class="logo-section">
+      <view class="app-name">法律咨询</view>
+      <view class="app-tagline">在线法律咨询服务</view>
+    </view>
+
+    <!-- 底部信息 -->
+    <view class="splash-footer">
+      <view class="footer-text">连接专业律师，解答法律问题</view>
+      <view class="version-text">v1.0.0</view>
+    </view>
+  </view>
+</view>

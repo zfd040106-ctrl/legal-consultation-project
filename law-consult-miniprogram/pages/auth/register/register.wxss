@@ -1,0 +1,337 @@
+/* 注册页面样式 */
+
+.register-container {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+  background-color: var(--bg-light);
+}
+
+/* 导航栏 */
+.navbar-class {
+  background-color: #FFFFFF;
+}
+
+/* 角色选择 */
+.role-selection {
+  padding: 24rpx 32rpx;
+  background: #FFFFFF;
+  border-bottom: 1rpx solid var(--border);
+}
+
+.role-title {
+  font-size: 26rpx;
+  font-weight: 600;
+  color: var(--text-primary);
+  margin-bottom: 16rpx;
+  padding-left: 0;
+}
+
+.role-selection /deep/ .t-radio {
+  padding-left: 0;
+}
+
+.checkbox-custom {
+  margin-bottom: 8rpx;
+}
+
+/* 表单区域 */
+.form-section {
+  flex: 1;
+  padding: 24rpx 32rpx 48rpx;
+  background: #FFFFFF;
+  overflow-y: auto;
+}
+
+/* 表单内所有组件去除左侧内边距 */
+.form-section .form-input,
+.form-section .checkbox-group,
+.form-section .register-btn,
+.form-section .register-footer {
+  padding-left: 0;
+}
+
+/* 表单输入框 */
+.form-input {
+  margin-bottom: 20rpx;
+}
+
+/* 覆盖 t-input 默认样式 - 与登录页一致 */
+.form-input /deep/ .t-input {
+  padding: 0;
+  padding-left: 0;
+}
+
+.form-input /deep/ .t-input__wrap {
+  padding: 0;
+  padding-left: 0;
+}
+
+.form-input /deep/ .t-input__label {
+  font-size: 26rpx;
+  font-weight: 500;
+  color: var(--text-primary);
+  margin-bottom: 8rpx;
+  padding: 0;
+  padding-left: 0;
+}
+
+.form-input /deep/ .t-input__wrap--border {
+  border: none;
+  background-color: #F5F5F5;
+  border-radius: 12rpx;
+  padding: 16rpx 20rpx;
+  padding-left: 20rpx;
+}
+
+.form-input /deep/ .t-input__input {
+  font-size: 28rpx;
+  padding: 0;
+  min-height: 40rpx;
+  line-height: 40rpx;
+  background-color: transparent !important;
+  color: var(--text-primary);
+}
+
+.form-input /deep/ .t-input__placeholder {
+  font-size: 28rpx;
+  color: var(--text-hint) !important;
+}
+
+.form-input /deep/ .t-input__tips {
+  font-size: 22rpx;
+  color: var(--danger);
+  margin-top: 6rpx;
+}
+
+/* 输入框标签 */
+.input-label {
+  font-size: 26rpx;
+  font-weight: 500;
+  color: var(--text-primary);
+  margin-bottom: 8rpx;
+  display: flex;
+  align-items: center;
+}
+
+.required {
+  color: var(--danger);
+  margin-left: 4rpx;
+}
+
+/* 账号输入部分 - 与 t-input 样式一致 */
+.account-section {
+  margin-bottom: 20rpx;
+}
+
+.account-input-wrapper {
+  display: flex;
+  align-items: flex-end;
+  border: none;
+  border-radius: 12rpx;
+  background: #FFFFFF;
+  padding: 0;
+  box-sizing: border-box;
+  margin-bottom: 8rpx;
+  border: 1rpx solid var(--border);
+}
+
+.account-prefix {
+  font-size: 28rpx;
+  font-weight: 700;
+  color: var(--primary);
+  padding: 0;
+  min-width: 40rpx;
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
+}
+
+.account-input-inner {
+  flex: 1;
+  display: flex;
+  align-items: flex-end;
+}
+
+.input-field {
+  width: 100%;
+  padding: 0;
+  border: none;
+  font-size: 28rpx;
+  background: transparent;
+  color: var(--text-primary);
+  box-sizing: border-box;
+  min-height: 40rpx;
+  line-height: 40rpx;
+}
+
+.input-field::placeholder {
+  color: var(--text-hint);
+}
+
+.input-placeholder {
+  color: var(--text-hint);
+  font-size: 28rpx;
+}
+
+.hint-text {
+  font-size: 22rpx;
+  color: var(--text-hint);
+  margin-bottom: 8rpx;
+}
+
+.error-text {
+  color: var(--danger);
+  font-size: 22rpx;
+  margin-top: 6rpx;
+}
+
+/* 律师专属部分 - 白色背景 */
+.lawyer-section {
+  background: #FFFFFF;
+  padding: 24rpx;
+  padding-left: 0;
+  border-radius: 12rpx;
+  margin-bottom: 20rpx;
+  border: 1rpx solid var(--border);
+}
+
+.lawyer-section .form-input {
+  margin-bottom: 16rpx;
+  padding-left: 0;
+}
+
+.lawyer-section .form-input:last-child {
+  margin-bottom: 0;
+}
+
+.lawyer-section .input-label {
+  padding-left: 0;
+}
+
+.lawyer-section /deep/ .t-input,
+.lawyer-section /deep/ .t-input__wrap,
+.lawyer-section /deep/ .t-input__label {
+  padding-left: 0;
+}
+
+/* 专业领域 */
+.specialization-group {
+  margin-bottom: 16rpx;
+}
+
+.specialization-list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12rpx;
+}
+
+.specialization-tag {
+  padding: 12rpx 20rpx;
+  border: 1rpx solid var(--border);
+  border-radius: 24rpx;
+  font-size: 26rpx;
+  color: var(--text-secondary);
+  background: #F5F5F5;
+  transition: all 200ms ease;
+}
+
+.specialization-tag.active {
+  background: var(--primary);
+  color: #FFFFFF;
+  border-color: var(--primary);
+}
+
+/* 文件上传区域 */
+.upload-group {
+  margin-bottom: 16rpx;
+}
+
+.upload-area {
+  border: 2rpx dashed var(--border);
+  border-radius: 12rpx;
+  padding: 32rpx 20rpx;
+  text-align: center;
+  background: #F5F5F5;
+  transition: all 200ms ease;
+  margin-top: 8rpx;
+}
+
+.upload-area:active {
+  border-color: var(--primary);
+  background: rgba(0, 122, 255, 0.05);
+}
+
+.upload-placeholder {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.upload-icon {
+  font-size: 48rpx;
+  margin-bottom: 12rpx;
+}
+
+.upload-text {
+  font-size: 26rpx;
+  color: var(--text-primary);
+  font-weight: 500;
+  margin-bottom: 8rpx;
+}
+
+.upload-hint {
+  font-size: 24rpx;
+  color: var(--text-hint);
+}
+
+.upload-success {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 16rpx 0;
+}
+
+.success-icon {
+  font-size: 48rpx;
+  color: var(--success);
+  margin-bottom: 8rpx;
+}
+
+.success-text {
+  font-size: 26rpx;
+  color: var(--success);
+  font-weight: 500;
+}
+
+/* 注册按钮 */
+.register-btn {
+  margin-bottom: 20rpx;
+}
+
+.register-btn /deep/ .t-button {
+  height: 88rpx;
+  line-height: 88rpx;
+  font-size: 30rpx;
+  font-weight: 600;
+  border-radius: 12rpx;
+}
+
+/* 底部链接 */
+.register-footer {
+  display: flex;
+  justify-content: center;
+  padding-top: 16rpx;
+  border-top: 1rpx solid var(--border);
+}
+
+.footer-link {
+  font-size: 26rpx;
+  color: var(--primary);
+  font-weight: 500;
+  padding: 12rpx 0;
+}
+
+.footer-link:active {
+  opacity: 0.7;
+}

@@ -1,0 +1,179 @@
+<view class="detail-container">
+  <t-navbar
+    t-class="navbar-class"
+    title="咨询详情"
+    left-arrow
+    bind:go-back="handleBack"
+  />
+
+  <view class="loading-wrapper" wx:if="{{loading}}">
+    <t-loading theme="circular" size="40rpx" text="加载中..." />
+  </view>
+
+  <scroll-view class="detail-content" scroll-y wx:else>
+    <view class="info-card">
+      <view class="card-header">
+        <view class="header-tags">
+          <t-tag size="small" variant="light" theme="primary">{{detail.category || '其他'}}</t-tag>
+          <t-tag size="small" variant="light" theme="warning">{{detail.assignmentTypeText}}</t-tag>
+          <t-tag
+            size="small"
+            variant="light"
+            wx:if="{{detail.priority === 'high'}}"
+            theme="danger"
+          >
+            紧急
+          </t-tag>
+          <t-tag
+            size="small"
+            variant="light"
+            theme="{{statusTheme[detail.status]}}"
+          >
+            {{statusText[detail.status]}}
+          </t-tag>
+        </view>
+        <view class="header-time">{{detail.createTimeText}}</view>
+      </view>
+
+      <view class="card-title">{{detail.title}}</view>
+      <view class="card-content">{{detail.content}}</view>
+
+      <view class="info-row" wx:if="{{detail.hasFee}}">
+        <text class="info-label">咨询服务费</text>
+        <text class="info-value fee-value">¥{{detail.feeAmountText}}</text>
+      </view>
+      <view class="info-row" wx:if="{{detail.hasFee}}">
+        <text class="info-label">支付状态</text>
+        <text class="info-value pay-status">{{detail.payStatusText}}</text>
+      </view>
+
+      <view class="card-attachments" wx:if="{{detail.attachments && detail.attachments.length > 0}}">
+        <view class="attachments-title">
+          <t-icon name="attachment" size="28rpx" />
+          <text>附件 ({{detail.attachments.length}})</text>
+        </view>
+        <view class="attachments-list">
+          <view
+            class="attachment-item"
+            wx:for="{{detail.attachments}}"
+            wx:key="index"
+            bindtap="previewAttachment"
+            data-url="{{item.url}}"
+            data-is-image="{{item.isImage}}"
+          >
+            <t-image
+              wx:if="{{item.isImage}}"
+              src="{{item.url}}"
+              mode="aspectFill"
+              class="attachment-image"
+            />
+            <view wx:else class="attachment-file">
+              <t-icon name="file" size="40rpx" />
+            </view>
+          </view>
+        </view>
+      </view>
+    </view>
+
+    <view class="lawyer-card" wx:if="{{detail.lawyerName}}">
+      <view class="lawyer-header">
+        <view class="lawyer-avatar">
+          <t-icon name="user" size="40rpx" color="#007AFF" />
+        </view>
+        <view class="lawyer-info">
+          <view class="lawyer-name">{{detail.lawyerName}}</view>
+          <view class="lawyer-title">{{detail.assignmentType === 'directed' ? '当前指定律师' : '当前接单律师'}}</view>
+        </view>
+      </view>
+    </view>
+
+    <view class="replies-section">
+      <view class="section-title">
+        <t-icon name="chat" size="32rpx" />
+        <text>回复记录 ({{replies.length}})</text>
+      </view>
+
+      <view class="replies-list" wx:if="{{replies.length > 0}}">
+        <view
+          class="reply-item {{item.isLawyer ? 'lawyer-reply' : 'user-reply'}}"
+          wx:for="{{replies}}"
+          wx:key="id"
+        >
+          <view class="reply-header">
+            <view class="reply-avatar">
+              <t-icon
+                name="{{item.isLawyer ? 'user' : 'user-circle'}}"
+                size="32rpx"
+                color="{{item.isLawyer ? '#007AFF' : '#666666'}}"
+              />
+            </view>
+            <view class="reply-info">
+              <view class="reply-name">{{item.isLawyer ? (item.lawyerName || detail.lawyerName || '律师') : '我'}}</view>
+              <view class="reply-time">{{item.createTimeText}}</view>
+            </view>
+          </view>
+          <view class="reply-content">{{item.content}}</view>
+        </view>
+      </view>
+
+      <view class="empty-replies" wx:else>
+        <t-empty icon="chat" description="暂无回复" />
+      </view>
+    </view>
+
+    <view class="bottom-spacing"></view>
+  </scroll-view>
+
+  <view class="action-bar" wx:if="{{!loading}}">
+    <view class="action-left">
+      <view class="action-item" bindtap="handleComplaint">
+        <t-icon name="flag" size="40rpx" />
+        <text>投诉</text>
+      </view>
+    </view>
+    <view class="action-right">
+      <t-button
+        wx:if="{{detail.canPay}}"
+        theme="primary"
+        size="medium"
+        bindtap="handlePay"
+      >
+        立即支付
+      </t-button>
+      <t-button
+        wx:elif="{{detail.lawyerId && detail.status !== 'resolved' && detail.status !== 'pending_accept' && detail.status !== 'closed'}}"
+        theme="primary"
+        size="medium"
+        bindtap="goToChat"
+      >
+        进入聊天
+      </t-button>
+      <t-button
+        wx:elif="{{detail.assignmentType === 'directed' && detail.status === 'pending_accept'}}"
+        theme="default"
+        size="medium"
+        disabled
+      >
+        等待指定律师接单
+      </t-button>
+      <t-button
+        wx:elif="{{!detail.lawyerId && detail.status === 'open'}}"
+        theme="default"
+        size="medium"
+        disabled
+      >
+        等待律师接单
+      </t-button>
+      <t-button
+        wx:elif="{{detail.status === 'closed'}}"
+        theme="default"
+        size="medium"
+        disabled
+      >
+        咨询已关闭
+      </t-button>
+    </view>
+  </view>
+
+  <t-toast id="t-toast" />
+</view>

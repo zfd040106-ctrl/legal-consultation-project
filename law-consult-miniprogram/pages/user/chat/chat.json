@@ -1,0 +1,12 @@
+{
+  "usingComponents": {
+    "t-navbar": "tdesign-miniprogram/navbar/navbar",
+    "t-icon": "tdesign-miniprogram/icon/icon",
+    "t-avatar": "tdesign-miniprogram/avatar/avatar",
+    "t-tag": "tdesign-miniprogram/tag/tag",
+    "t-loading": "tdesign-miniprogram/loading/loading",
+    "t-toast": "tdesign-miniprogram/toast/toast"
+  },
+  "enablePullDownRefresh": false,
+  "disableScroll": true
+}
